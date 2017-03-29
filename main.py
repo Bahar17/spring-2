@@ -7,8 +7,9 @@ import tornado.options
 import tornado.websocket
 from base.settings import load_tornado_settings
 
-settings = load_tornado_settings('base', 'test', 'ws')
+modules = ['base', 'test', 'ws']
 
+settings = load_tornado_settings(*modules)
 
 
 def init_options():
