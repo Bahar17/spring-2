@@ -47,7 +47,7 @@ def load_tornado_settings(*modules):
         except ImportError, err:
             raise ImportError(
                 "Could not import settings '%s' (Is it on sys.path?): %s" % (
-                module, err))
+                    module, err))
 
     for module in modules:
         try:
@@ -71,6 +71,15 @@ class Config(object):
     def update(self, **kw):
         for name, value in kw.items():
             self.__setattr__(name, value)
+
+    def update_db_setting(self):
+        self.SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s?charset=utf8' % (
+            self.DB_USER,
+            self.DB_PWD,
+            self.DB_HOST,
+            self.DB_PORT,
+            self.DB_NAME
+        )
 
     def setdefault(self, key, default=None):
         try:
