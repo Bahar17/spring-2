@@ -6,7 +6,5 @@ from core import db
 
 class MainRequestHandler(ApiHandler):
     def get(self):
-        new_user = User(name='Bob')
-        db.session.add(new_user)
-        db.session.commit()
-        self.write('hello world')
+        user = User.query.get(1)
+        self.write('hello world %s' % user.name)
