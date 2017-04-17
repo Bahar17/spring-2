@@ -43,8 +43,6 @@ def make_app(**kwargs):
                       debug=config.DEBUG,
                       **app_settings)
 
-    tornado.web.Application.current_app = app
-
     db.init_app(app)
     db.app = app
     migrate.init_app(app, db)
