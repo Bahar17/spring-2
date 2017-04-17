@@ -29,7 +29,7 @@ static-src/libs
 assets.json
 .sass-cache
 npm-debug.log
-
+base/my_settings.*
 # Packages
 lib
 !static-src/front/scripts/lib
