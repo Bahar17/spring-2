@@ -8,8 +8,9 @@ from os import path, environ as _env
 settings = {
     'DEBUG': False,
     'TESTING': False,
-    'PORT': 8888
+    'PORT': 8000,
 }
+
 
 class CalypsoEnv(object):
     # 线上环境用Calypso 配置，所以做一个environ 的代理
@@ -39,20 +40,6 @@ class EnvConfigType(type):
         return value
 
 
-class Config(object):
-    __metaclass__ = EnvConfigType
-
-    URIS = []
-    ROUTES = []
-
-    def update(self, **kw):
-        for name, value in kw.items():
-            self.__setattr__(name, value)
-
-    def update_uri(self, routes, url_prefix=''):
-        self.ROUTES.extend(routes)
-        self.URIS.extend([(url_prefix + r['urls'][0], r['resource'])for r in routes])
-
 def load_tornado_settings(*modules):
     settings.update({'MODULES': modules})
     kwargs = {}
@@ -63,7 +50,9 @@ def load_tornado_settings(*modules):
         try:
             mods.append(importlib.import_module('%s.settings' % module))
         except ImportError, err:
-            raise ImportError("Could not import settings '%s' (Is it on sys.path?): %s" % (module, err))
+            raise ImportError(
+                "Could not import settings '%s' (Is it on sys.path?): %s" % (
+                module, err))
 
     for module in modules:
         try:
@@ -82,6 +71,41 @@ def load_settings(config):
     config.update(**settings)
     try:
         from .routes import routes
+
         config.update_uri(routes)
     except:
         pass
+
+
+class Config(object):
+    __metaclass__ = EnvConfigType
+
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+    def update(self, **kw):
+        for name, value in kw.items():
+            self.__setattr__(name, value)
+
+    def setdefault(self, key, default=None):
+        try:
+            return getattr(self, key)
+        except AttributeError:
+            setattr(self, key, default)
+        return default
+
+    def update_uri(self, routes, url_prefix=''):
+        self.ROUTES.extend(routes)
+        self.URIS.extend(
+            [(url_prefix + r['urls'][0], r['resource']) for r in routes])
+
+    URIS = []
+    ROUTES = []
+
+    DB_HOST = 'localhost'
+    DB_USER = 'root'
+    DB_PWD = ''
+    DB_NAME = 'spring'
+    DB_PORT = '3306'
+    SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s?charset=utf8' % (DB_USER, DB_PWD, DB_HOST, DB_PORT, DB_NAME)
+    SQLALCHEMY_TRACK_MODIFICATIONS = True

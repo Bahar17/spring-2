@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import tornado.web
 
+
 class RequestHandler(tornado.web.RequestHandler):
     on_initialize_decorators = []
+
     def initialize(self):
         request = self.request
         meth = getattr(self, self.request.method.lower(), None)
@@ -14,3 +16,7 @@ class RequestHandler(tornado.web.RequestHandler):
             meth = decorator(meth)
 
         setattr(self, self.request.method.lower(), meth)
+
+    def on_finish(self):
+        for func in self.application.teardown_request_funcs:
+            func(self)

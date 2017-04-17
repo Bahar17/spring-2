@@ -6,43 +6,60 @@ import tornado.web
 import tornado.options
 import tornado.websocket
 from base.settings import load_tornado_settings
+from core import db, migrate
 
 modules = ['base', 'test', 'ws']
+config = load_tornado_settings(*modules)
 
-settings = load_tornado_settings(*modules)
+
+class Application(tornado.web.Application):
+    teardown_request_funcs = []
+
+    def __init__(self, url_list, **app_settings):
+        tornado.web.Application.__init__(self, url_list, **app_settings)
+        self.config = config
+
+    def teardown_request(self, f):
+        self.teardown_request_funcs.append(f)
+        return f
 
 
-def init_options():
-    tornado.options.define('port', default=8000, type=int)
-    tornado.options.define('worker', default=1, type=int)
-    tornado.options.define('debug', default=False, type=bool)
-    tornado.options.define('doc', default=False, type=bool)
-    tornado.options.define('timeout', default=2, type=int)
-    tornado.options.parse_command_line()
-
-    return tornado.options.options
-
-if __name__ == "__main__":
-
-    _options = init_options()
-
+def make_app(**kwargs):
     import socket
 
-    socket.setdefaulttimeout(_options.timeout)
+    socket.setdefaulttimeout(kwargs.get('timeout'))
 
-    settings.DEBUG = _options.debug
-    settings.DOC = _options.doc
-    settings.PORT = _options.port
+    config.DEBUG = kwargs.get('debug')
+    config.DOC = kwargs.get('doc')
+    config.PORT = kwargs.get('port')
+    config.WORKER = kwargs.get('worker')
 
     url_list = []
-    url_list.extend(settings.URIS)
+    url_list.extend(config.URIS)
 
     app_settings = {}
 
-    application = tornado.web.Application(url_list,
-                                          debug=_options.debug,
-                                          **app_settings)
-    http_server = tornado.httpserver.HTTPServer(application)
-    http_server.bind(_options.port)
-    http_server.start(_options.worker)
+    app = Application(url_list,
+                      debug=config.DEBUG,
+                      **app_settings)
+
+    tornado.web.Application.current_app = app
+
+    db.init_app(app)
+    db.app = app
+    migrate.init_app(app, db)
+    return app
+
+
+def main(**kwargs):
+    app = make_app(**kwargs)
+
+    http_server = tornado.httpserver.HTTPServer(app)
+    http_server.bind(config.PORT)
+    http_server.start(config.WORKER)
     tornado.ioloop.IOLoop.current().start()
+
+
+if __name__ == "__main__":
+    main()
+

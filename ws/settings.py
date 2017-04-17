@@ -7,11 +7,7 @@ from os import path, environ as _env
 
 url_prefix = '/ws'
 
-settings = {
-    'DEBUG': False,
-    'TESTING': False,
-    'PORT': 8888
-}
+settings = {}
 
 
 def load_settings(config):
