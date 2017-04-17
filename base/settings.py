@@ -9,10 +9,11 @@ settings = {
     'DEBUG': False,
     'TESTING': False,
     'PORT': 8000,
+    'WORKER': 1,
 }
 
 
-def load_settings(config):
+def load_settings(config, **kwargs):
     config.update(**settings)
     try:
         from .routes import routes

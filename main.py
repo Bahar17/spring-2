@@ -26,13 +26,12 @@ class Application(tornado.web.Application):
 
 def make_app(**kwargs):
     import socket
-
-    socket.setdefaulttimeout(kwargs.get('timeout'))
-
-    config.DEBUG = kwargs.get('debug')
-    config.DOC = kwargs.get('doc')
-    config.PORT = kwargs.get('port')
-    config.WORKER = kwargs.get('worker')
+    socket.setdefaulttimeout(kwargs.get('timeout', 2))
+    if kwargs:
+        config.DEBUG = kwargs.get('debug')
+        config.DOC = kwargs.get('doc')
+        config.PORT = kwargs.get('port')
+        config.WORKER = kwargs.get('worker')
 
     url_list = []
     url_list.extend(config.URIS)
