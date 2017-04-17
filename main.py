@@ -5,7 +5,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.options
 import tornado.websocket
-from base.settings import load_tornado_settings
+from core.settings import load_tornado_settings
 from core import db, migrate
 
 modules = ['base', 'test', 'ws']
