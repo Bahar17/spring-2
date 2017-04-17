@@ -1,4 +1,4 @@
-from datebase import SQLAlchemy
+from database import SQLAlchemy
 from migrate import Migrate
 
 db = SQLAlchemy()
