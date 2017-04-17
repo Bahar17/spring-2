@@ -1,13 +1,13 @@
-"""empty message
+"""init
 
-Revision ID: 7da418957923
+Revision ID: 4d2c8ddc27db
 Revises: 
-Create Date: 2017-04-17 17:21:22.514711
+Create Date: 2017-04-17 17:25:31.389849
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '7da418957923'
+revision = '4d2c8ddc27db'
 down_revision = None
 branch_labels = None
 depends_on = None
