@@ -21,8 +21,6 @@ celerybeat-schedule.db
 
 node_modules
 .tmp
-zzhifubao/.tem
-zzhifubao/static
 tests/.cache
 static
 static-src/libs
