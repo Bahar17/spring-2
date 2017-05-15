@@ -31,9 +31,12 @@ class LarpGame(Model):
 
     __tablename__ = 'larp_game'
 
+    TYPE_PART = 'part'
+    TYPE_DISCOVERY = 'discovery'
+
     id = db.Column(db.String(32), primary_key=True, default=game_id_generator)
     name = db.Column(db.String(64), nullable=False)
-    summary = db.Column(db.String(20), nullable=False)
+    summary = db.Column(db.String(), nullable=False)
     icon = db.Column(db.String(256), nullable=True)
     desc = db.Column(db.String(), nullable=True)
     others = db.Column(JsonString, nullable=True)
@@ -47,6 +50,8 @@ class LarpGame(Model):
     player_manual = db.Column(db.String(), nullable=True)
     manager_manual = db.Column(db.String(), nullable=True)
     mission_manual = db.Column(db.String(), nullable=True)
+    type = db.Column(db.String(16), nullable=False, index=True,
+                     server_default=TYPE_DISCOVERY)
 
     date_created = db.Column(DateTime,
                              index=True, nullable=False,
@@ -86,7 +91,7 @@ class GameRole(Model):
     profession_id = db.Column(db.Integer(), nullable=False)
     hidden_profession_id = db.Column(db.Integer(), nullable=True)
 
-    summary = db.Column(db.String(20), nullable=False)
+    summary = db.Column(db.String(), nullable=False)
     character = db.Column(db.String(), nullable=False)
     desc = db.Column(db.String(), nullable=False)
     play_script = db.Column(JsonString, nullable=False)

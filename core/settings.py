@@ -104,7 +104,7 @@ class Config(object):
     DB_HOST = 'localhost'
     DB_USER = 'root'
     DB_PWD = ''
-    DB_NAME = 'spring'
+    DB_NAME = 'larp_spring'
     DB_PORT = '3306'
     SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s?charset=utf8' % (DB_USER, DB_PWD, DB_HOST, DB_PORT, DB_NAME)
     SQLALCHEMY_TRACK_MODIFICATIONS = True
