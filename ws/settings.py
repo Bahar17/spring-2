@@ -5,7 +5,7 @@ import importlib
 
 from os import path, environ as _env
 
-url_prefix = '/ws'
+url_prefix = 'ws'
 
 settings = {}
 
