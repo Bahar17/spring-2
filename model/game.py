@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy import sql
-from core import db, Model, DateTime, JsonString, generator_string_id
+from core import db, Model, DateTime, JsonText, generator_string_id
 
 
 def game_id_generator():
@@ -36,10 +36,11 @@ class LarpGame(Model):
 
     id = db.Column(db.String(32), primary_key=True, default=game_id_generator)
     name = db.Column(db.String(64), nullable=False)
-    summary = db.Column(db.String(), nullable=False)
     icon = db.Column(db.String(256), nullable=True)
-    desc = db.Column(db.String(), nullable=True)
-    others = db.Column(JsonString, nullable=True)
+    desc = db.Column(JsonText, nullable=True)
+    # summary
+    # desc
+    # other
     price = db.Column(db.Integer(), index=True, server_default=u'314')
 
     min_required_num = db.Column(db.Integer(), nullable=False,
@@ -47,9 +48,10 @@ class LarpGame(Model):
     max_required_num = db.Column(db.Integer(), nullable=False,
                                  server_default=u'0')
     ap_num = db.Column(db.Integer(), nullable=False, server_default=u'10')
-    player_manual = db.Column(db.String(), nullable=True)
-    manager_manual = db.Column(db.String(), nullable=True)
-    mission_manual = db.Column(db.String(), nullable=True)
+    manual = db.Column(JsonText, nullable=True)
+    # player_manual
+    # manager_manual = db.Column(db.Text(), nullable=True)
+    # mission_manual = db.Column(db.Text(), nullable=True)
     type = db.Column(db.String(16), nullable=False, index=True,
                      server_default=TYPE_DISCOVERY)
 
@@ -91,10 +93,11 @@ class GameRole(Model):
     profession_id = db.Column(db.Integer(), nullable=False)
     hidden_profession_id = db.Column(db.Integer(), nullable=True)
 
-    summary = db.Column(db.String(), nullable=False)
-    character = db.Column(db.String(), nullable=False)
-    desc = db.Column(db.String(), nullable=False)
-    play_script = db.Column(JsonString, nullable=False)
+    character = db.Column(JsonText, nullable=False)
+    # summary = db.Column(db.Text(), nullable=False)
+    # desc = db.Column(db.Text(), nullable=False)
+
+    play_script = db.Column(JsonText, nullable=False)
 
     date_created = db.Column(DateTime,
                              index=True, nullable=False,
@@ -148,13 +151,13 @@ class GamePlace(Model):
                           server_default=sql.false())
     owner = db.Column(db.Integer(), nullable=False, server_default=u'0')
 
-    hiding_keys = db.Column(JsonString, nullable=True)
+    hiding_keys = db.Column(JsonText, nullable=True)
     type = db.Column(db.String(16), nullable=False, index=True,
                      server_default=TYPE_CLUE)
 
     allow_type = db.Column(db.String(16), nullable=False, index=True,
                            server_default=ALLOW_TYPE_ALL)
-    allow_ids = db.Column(JsonString, nullable=True)
+    allow_ids = db.Column(JsonText, nullable=True)
 
     date_created = db.Column(DateTime,
                              index=True, nullable=False,
@@ -171,14 +174,14 @@ class PlaceClue(Model):
     place_id = db.Column(db.Integer(), nullable=False)
     order_score = db.Column(db.Integer(), nullable=False,
                             server_default=u'0')
-    content = db.Column(db.String(), nullable=True)
-    imgs = db.Column(JsonString, nullable=True)
+    content = db.Column(db.Text(), nullable=True)
+    imgs = db.Column(JsonText, nullable=True)
 
 class PlaceFile(Model):
     __tablename__ = 'place_file'
 
     id = db.Column(db.Integer(), primary_key=True)
     place_id = db.Column(db.Integer(), nullable=False)
-    name = db.Column(db.String(), nullable=False)
-    content = db.Column(db.String(), nullable=True)
-    imgs = db.Column(JsonString, nullable=True)
+    name = db.Column(db.String(64), nullable=False)
+    content = db.Column(db.Text(), nullable=True)
+    imgs = db.Column(JsonText, nullable=True)
