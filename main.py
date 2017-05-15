@@ -8,7 +8,7 @@ import tornado.websocket
 from core.settings import load_tornado_settings
 from core import db, migrate
 
-modules = ['base', 'test', 'ws']
+modules = ['base', 'panel', 'ws']
 config = load_tornado_settings(*modules)
 
 
@@ -36,7 +36,9 @@ def make_app(**kwargs):
     url_list = []
     url_list.extend(config.URIS)
 
-    app_settings = {}
+    app_settings = {
+        "cookie_secret": "bZJc2sWbQLKos6GkHn/VB9oXwQt8S0R0kRvJ5/xJ89E=",
+    }
 
     app = Application(url_list,
                       debug=config.DEBUG,

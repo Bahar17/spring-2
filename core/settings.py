@@ -88,10 +88,15 @@ class Config(object):
             setattr(self, key, default)
         return default
 
+    def uri_tuple(self, route, url_prefix):
+        route['resource'].endpoint = route['endpoint']
+        route['resource'].blueprint = url_prefix.replace('/', '_')
+
+        return '/' + url_prefix + route['urls'][0], route['resource']
+
     def update_uri(self, routes, url_prefix=''):
         self.ROUTES.extend(routes)
-        self.URIS.extend(
-            [(url_prefix + r['urls'][0], r['resource']) for r in routes])
+        self.URIS.extend([self.uri_tuple(r, url_prefix) for r in routes])
 
     URIS = []
     ROUTES = []
