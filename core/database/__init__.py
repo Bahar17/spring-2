@@ -55,7 +55,7 @@ def _record_queries(app):
     rq = app.config['SQLALCHEMY_RECORD_QUERIES']
     if rq is not None:
         return rq
-    return bool(app.config['TESTING'])
+    return False
 
 
 class _DebugQueryTuple(tuple):
