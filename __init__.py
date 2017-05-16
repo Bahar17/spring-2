@@ -1,1 +1,1 @@
-__author__ = 'legenove'
+# -*- coding: utf-8 -*-
