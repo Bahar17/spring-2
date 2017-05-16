@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
@@ -15,9 +16,10 @@ config = load_tornado_settings(*modules)
 class Application(tornado.web.Application):
     teardown_request_funcs = []
 
-    def __init__(self, url_list, **app_settings):
+    def __init__(self, url_list, import_name, **app_settings):
         tornado.web.Application.__init__(self, url_list, **app_settings)
         self.config = config
+        self.import_name = import_name
 
     def teardown_request(self, f):
         self.teardown_request_funcs.append(f)
@@ -36,9 +38,12 @@ def make_app(**kwargs):
     url_list = []
     url_list.extend(config.URIS)
 
-    app_settings = {}
+    app_settings = {
+        "cookie_secret": "bZJc2sWbQLKos6GkHn/VB9oXwQt8S0R0kRvJ5/xJ89E=",
+        "static_path": os.path.join(os.path.dirname(__file__), "static")
+    }
 
-    app = Application(url_list,
+    app = Application(url_list, __name__,
                       debug=config.DEBUG,
                       **app_settings)
 

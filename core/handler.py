@@ -20,3 +20,9 @@ class RequestHandler(tornado.web.RequestHandler):
     def on_finish(self):
         for func in self.application.teardown_request_funcs:
             func(self)
+
+    def set_headers(self, items):
+        if items is None:
+            return
+        for k, v in items:
+            self.set_header(k, v)
