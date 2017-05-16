@@ -1,0 +1,996 @@
+swagger: '2.0'
+info:
+    title: Fenda V2 API
+    version: '1.0.0'
+schemes:
+    - http
+basePath:
+    /v2
+consumes:
+    - application/json
+profuces:
+    - application/json
+definitions:
+    id:
+        type: integer
+        format: int32
+    offer:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 2000000
+    count:
+        type: integer
+        format: int32
+        default: 0
+    answer_id:
+        type: string
+        minLength: 16
+        maxLength: 32
+    question_id:
+        type: string
+        minLength: 16
+        maxLength: 32
+    voice_id:
+        type: string
+        minLength: 16
+        maxLength: 32
+    name:
+        type: string
+        minLength: 1
+        maxLength: 64
+    title:
+        type: string
+        minLength: 2
+        maxLength: 18
+    introduction:
+        type: string
+        minLength: 2
+        maxLength: 128
+    content:
+        type: string
+        minLength: 2
+        maxLength: 1024
+    url:
+        type: string
+        minLength: 5
+        maxLength: 256
+    mobile:
+        type: string
+        minLength: 11
+        maxLength: 14
+    datetime:
+        type: string
+        format: datetime
+    pay_type:
+        type: string
+        enum:
+            - weixin_pay
+    WordSearch:
+        properties:
+            account_id:
+                type: integer
+            name:
+                type: string
+    TagLite:
+        properties:
+            id:
+                type: integer
+            name:
+                type: string
+    AccountLite:
+        required:
+            - id
+            - nickname
+            - avatar
+        properties:
+            id:
+                $ref: '#/definitions/id'
+            nickname:
+                type: string
+                minLength: 1
+                maxLength: 64
+            price:
+                type: integer
+                format: int32
+            title:
+                $ref: '#/definitions/title'
+            avatar:
+                $ref: '#/definitions/url'
+            is_verified:
+                type: boolean
+            answers_count:
+                type: integer
+                format: int32
+    Account:
+        required:
+            - id
+            - nickname
+            - avatar
+        properties:
+            id:
+                $ref: '#/definitions/id'
+            nickname:
+                type: string
+                minLength: 1
+                maxLength: 64
+            title:
+                $ref: '#/definitions/title'
+            avatar:
+                $ref: '#/definitions/url'
+            introduction:
+                $ref: '#/definitions/introduction'
+            price:
+                type: integer
+                format: int32
+            answers_count:
+                type: integer
+                format: int32
+            followers_count:
+                type: integer
+                format: int32
+            tags:
+                type: array
+                items:
+                    $ref: '#/definitions/TagLite'
+            price:
+                type: integer
+                format: int32
+            is_receive_image_question:
+                type: boolean
+    question_status:
+        type: string
+        enum:
+            - draft
+            - paid
+            - review
+            - rejected
+            - succeed
+            - refused
+            - closed
+            - refunded
+            - answered
+            - revoked
+    question_type:
+        type: string
+        enum:
+            - talk
+            - fenda
+            - normal
+            - tenant
+            - recover
+            - top_line
+            - broadcast
+            - commonweal
+            - long_voice
+            - free_long_voice
+    QuestionRefuseReason:
+        properties:
+            content:
+                type: string
+    Question:
+        required:
+            - id
+            - type
+            - offer
+            - status
+            - content
+            - account_id
+            - respondent_id
+            - date_created
+            - date_updated
+        properties:
+            id:
+                $ref: '#/definitions/question_id'
+            offer:
+                $ref: '#/definitions/offer'
+            content:
+                $ref: '#/definitions/content'
+            account_id:
+                $ref: '#/definitions/id'
+            respondent_id:
+                $ref: '#/definitions/id'
+            status:
+                $ref: '#/definitions/question_status'
+            type:
+                $ref: '#/definitions/question_type'
+            date_created:
+                $ref: '#/definitions/datetime'
+            date_updated:
+                $ref: '#/definitions/datetime'
+    Topic:
+        properties:
+            id:
+                type: integer
+            name:
+                type: string
+    QuestionDetail:
+        description: 自己提出的问题才可调用
+        allOf:
+            - $ref: '#/definitions/Question'
+            - type: object
+        properties:
+            answer:
+                $ref: '#/definitions/Answer'
+            asker:
+                $ref: '#/definitions/AccountLite'
+            respondent:
+                $ref: '#/definitions/AccountLite'
+            visitor_count:
+                $ref: '#/definitions/count'
+            listenings_count:
+                $ref: '#/definitions/count'
+            images_count:
+                type: integer
+                format: int32
+            bonus:
+                description: 当前用户赞赏金额
+                type: integer
+                format: int32
+            bonuses:
+                description: 被赞赏金额
+                type: integer
+                format: int32
+            has_quota:
+                type: boolean
+            topics:
+                type: array
+                items:
+                    $ref: '#/definitions/Topic'
+            topic_short_title:
+                type: string
+            refuse_reason:
+                $ref: '#/definitions/QuestionRefuseReason'
+            is_enable_inquiry:
+                type: boolean
+            has_discussions:
+                type: boolean
+            discussions_count:
+                type: integer
+                format: int32
+            is_public:
+                type: boolean
+            is_enable_revoke:
+                type: boolean
+            is_free:
+                type: boolean
+            free_type:
+                type: string
+            remaining_seconds:
+                type: integer
+                format: int32
+    QuestionWithAnswer:
+        description: 已经回答的公开的问题 我回答的问题列表
+        allOf:
+            - $ref: '#/definitions/Question'
+            - type: object
+        properties:
+            asker:
+                $ref: '#/definitions/AccountLite'
+            respondent:
+                $ref: '#/definitions/AccountLite'
+            answer:
+                $ref: '#/definitions/AnswerInPublicList'
+            discussions_count:
+                type: integer
+                format: int32
+            listenings_count:
+                $ref: '#/definitions/count'
+            images_count:
+                type: integer
+                format: int32
+            is_sticky:
+                type: boolean
+            is_free:
+                type: boolean
+            free_type:
+                type: string
+            remaining_seconds:
+                type: integer
+                format: int32
+    TenantQuestion:
+        allOf:
+            - type: object
+            - $ref: '#/definitions/QuestionWithAnswer'
+    CreateQuestionVisit:
+        required:
+            - question_id
+        properties:
+            question_id:
+                $ref: '#/definitions/question_id'
+            source:
+                type: string
+                description: 听的来源 付费偷听/好友免费听/分答问/限免听/赞赏听/讨论
+                enum:
+                    - share
+                    - fenda
+                    - free
+                    - bonus
+                    - talk
+            free_key:
+                type: string
+            rewarder_id:
+                description: 打赏者id
+                type: integer
+    CreateQuestionListen:
+        required:
+            - source
+            - voice_id
+        properties:
+            uid:
+                type: string
+            voice_id:
+                type: string
+            source:
+                type: string
+                description: 听的来源
+                enum:
+                    - android
+                    - yidian
+                    - weixin
+                    - web
+                    - ios
+    Answer:
+        properties:
+            id:
+                $ref: '#/definitions/answer_id'
+            voice_id:
+                type: string
+            duration:
+                type: integer
+                format: int32
+            question_id:
+                $ref: '#/definitions/question_id'
+            content:
+                type: string
+            is_reanswered:
+                type: boolean
+            status:
+                type: string
+                enum:
+                    - rejected
+            is_liked:
+                type: boolean
+            likings_count:
+                type: integer
+                format: int32
+            type:
+               type: string
+               enum:
+                   - text
+                   - answer
+            date_updated:
+                $ref: '#/definitions/datetime'
+    AnswerWithVoiceUrl:
+        allOf:
+            - $ref: '#/definitions/Answer'
+            - type: object
+        properties:
+            voice_url:
+                type: string
+    AnswerInPublicList:
+        properties:
+            id:
+                $ref: '#/definitions/answer_id'
+            question_id:
+                $ref: '#/definitions/question_id'
+            voice_id:
+                type: string
+            is_liked:
+                type: boolean
+            likings_count:
+                type: integer
+                format: int32
+            duration:
+                type: integer
+                format: int32
+            content:
+                type: string
+            status:
+                type: string
+                enum:
+                    - rejected
+            date_updated:
+                $ref: '#/definitions/datetime'
+    QuestionBeforeAnswered:
+        required:
+            - id
+            - type
+            - offer
+            - status
+            - content
+            - account_id
+            - respondent_id
+            - date_created
+            - date_updated
+        allOf:
+            - $ref: '#/definitions/Question'
+            - type: object
+        properties:
+            images_count:
+                type: integer
+                format: int32
+            asker:
+                $ref: '#/definitions/AccountLite'
+            respondent:
+                $ref: '#/definitions/AccountLite'
+    SelfAskQuestionWithAnswerOptional:
+        description: 我问列表
+        required:
+            - id
+            - offer
+            - content
+            - status
+            - date_created
+        properties:
+            id:
+                $ref: '#/definitions/question_id'
+            offer:
+                $ref: '#/definitions/offer'
+            content:
+                $ref: '#/definitions/content'
+            respondent:
+                $ref: '#/definitions/AccountLite'
+            status:
+                $ref: '#/definitions/question_status'
+            type:
+                $ref: '#/definitions/question_type'
+            date_created:
+                $ref: '#/definitions/datetime'
+            date_updated:
+                $ref: '#/definitions/datetime'
+            images_count:
+                type: integer
+                format: int32
+            is_public:
+                type: boolean
+    CreateQuestion:
+        required:
+            - content
+        properties:
+            form_id:
+                type: string
+            is_public:
+                type: boolean
+            content:
+                $ref: '#/definitions/content'
+            images:
+                type: array
+                maxItems: 3
+                items:
+                    type: string
+    CreateWeixinPay:
+        required:
+            - order_type
+            - trade_type
+            - target_type
+            - target_id
+        properties:
+            order_type:
+                type: string
+                description: 订单类型 提问/偷听/赞赏/悬赏/小讲
+                enum:
+                    - ask
+                    - visit
+                    - bonus
+                    - recourse
+                    - speech
+            target_type:
+                type: string
+                enum:
+                    - question
+                    - recourse
+                    - speech
+            target_id:
+                type: string
+            trade_type:
+                type: string
+                default: NATIVE
+                enum:
+                    - JSAPI
+                    - NATIVE
+                    - APP
+    Unifiedorder:
+        required:
+            - return_code
+        properties:
+            return_code:
+                type: string
+                enum:
+                    - SUCCESS
+                    - FAIL
+            return_msg:
+                description: 错误原因
+                type: string
+            appid:
+                type: string
+            mch_type:
+                type: string
+                enum:
+                    - guokr
+                    - zaihang
+            device_info:
+                type: string
+            nonce_str:
+                type: string
+            sign:
+                type: string
+            result_code:
+                description: 业务结果
+                type: string
+                enum:
+                    - SUCCESS
+                    - FAIL
+            err_code:
+                type: string
+            err_code_des:
+                type: string
+            trade_type:
+                type: string
+                enum:
+                    - JSAPI
+                    - NATIVE
+                    - APP
+            prepay_id:
+                type: string
+            code_url:
+                description: trade_type为NATIVE是有返回
+                type: string
+            time_stamp:
+                type: string
+    Voice:
+        required:
+            - id
+            - url
+        properties:
+            id:
+                type: string
+            url:
+                type: string
+    Success:
+        properties:
+            ok:
+                type: boolean
+    Error:
+        properties:
+            error_code:
+                type: string
+            message:
+                type: string
+            text:
+                type: string
+    None:
+        type: object
+parameters:
+    AccessToken:
+        name: Authorization
+        in: header
+        required: true
+        type: string
+    AccessTokenOptional:
+        name: Authorization
+        in: header
+        required: false
+        type: string
+    Authorization:
+        description: 格式 (Basic hashkey) 注 hashkey为client_id + client_secret 做BASE64处理
+        in: header
+        name: Authorization
+        required: true
+        type: string
+    int_id_in_path:
+        description: int id in path
+        name: id
+        in: path
+        required: true
+        type: integer
+    account_id_in_path:
+        description: account id in path
+        name: id
+        in: path
+        required: true
+        type: integer
+    source_in_query:
+        description: source in query
+        name: source
+        in: query
+        required: false
+        type: string
+        enum:
+            - wxapp
+            - weixin
+            - ios
+            - android
+    voice_id_in_path:
+        description: voice id in path
+        name: id
+        in: path
+        required: true
+        type: string
+    tenant_id_in_path:
+        description: tenant id in path
+        name: tenant_id
+        in: path
+        required: true
+        type: string
+    question_id_in_path:
+        description: question id in path
+        name: id
+        in: path
+        required: true
+        type: string
+    answer_id_in_query_required:
+        description: answer id in query
+        name: id
+        in: query
+        required: true
+        type: string
+    order_type_in_query:
+        description: order type in query
+        name: order_by
+        in: query
+        type: string
+        default: score
+        enum:
+            - latest
+            - default
+            - visitor_count
+            - date_answered
+            - listenings_count
+            - score
+    start_time_in_query:
+        description: 开始时间 格式为 '2016-01-01'
+        name: start_time
+        in: query
+        type: string
+        format: date
+    end_time_in_query:
+        description: 开始时间 格式为 '2016-01-01'
+        name: end_time
+        in: query
+        type: string
+        format: date
+    key_word_in_query:
+        description: key word in query
+        name: kw
+        in: query
+        type: string
+        maxLength: 30
+    page:
+        description: page number
+        name: page
+        in: query
+        required: false
+        type: integer
+        format: int32
+        maximum: 10000
+    per_page:
+        description: per_page number
+        name: per_page
+        in: query
+        required: false
+        type: integer
+        format: int32
+        maximum: 100
+    offset:
+        description: offset number
+        name: offset
+        in: query
+        required: false
+        format: int32
+        type: integer
+    limit:
+        description: limit number
+        name: limit
+        in: query
+        required: false
+        type: integer
+        format: int32
+        maximum: 100
+securityDefinitions:
+    OAuth2:
+        type: oauth2
+        flow: password
+        tokenUrl: https://apis.zaih.com/apis/open/v1/oauth/token
+        scopes:
+            open: 开放API
+            panel: 后台API
+            backend: backend API
+paths:
+    /tags/{id}/accounts:
+        get:
+            summary: 单个标签人物
+            description: 单个标签人物
+            tags: [TAG]
+            operationdId: get_tag_accounts
+            parameters:
+                - $ref: '#/parameters/AccessTokenOptional'
+                - $ref: '#/parameters/int_id_in_path'
+                - $ref: '#/parameters/source_in_query'
+                - $ref: '#/parameters/offset'
+                - $ref: '#/parameters/limit'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+            responses:
+                200:
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/AccountLite'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+    /accounts/handpick:
+        get:
+            summary: 小程序首页精选人物
+            description: 小程序首页精选
+            tags: [ACCOUNTS]
+            operationdId: get_accounts_handpic
+            parameters:
+                - $ref: '#/parameters/AccessTokenOptional'
+                - $ref: '#/parameters/offset'
+                - $ref: '#/parameters/limit'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+            responses:
+                200:
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/AccountLite'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+    /accounts/{id}:
+        get:
+            summary: 用户信息
+            description: 用户信息
+            tags: [ACCOUNTS]
+            operationdId: get_account
+            parameters:
+                - $ref: '#/parameters/account_id_in_path'
+            responses:
+                200:
+                    description: 用户信息
+                    schema:
+                        $ref: '#/definitions/Account'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+    /accounts/{id}/answers:
+        get:
+            summary: 某人回答过的公开的问题
+            description: 某人回答过的公开问题
+            tags: [QUESTIONS]
+            operationdId: get_account_questions
+            parameters:
+                - $ref: '#/parameters/AccessTokenOptional'
+                - $ref: '#/parameters/account_id_in_path'
+                - $ref: '#/parameters/order_type_in_query'
+                - $ref: '#/parameters/start_time_in_query'
+                - $ref: '#/parameters/end_time_in_query'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+            responses:
+                200:
+                    description: 问题列表
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/QuestionWithAnswer'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+    /accounts/{id}/questions:
+        post:
+            summary: 向某人提问
+            description: 向某人提问
+            tags: [QUESTIONS]
+            operationdId: create_question
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/account_id_in_path'
+                - name: create_question
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/CreateQuestion'
+            responses:
+                201:
+                    description: 问题详情
+                    schema:
+                        $ref: '#/definitions/QuestionBeforeAnswered'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [open]
+    /zones/{tenant_id}/answers:
+        get:
+            summary: 专区问题答案列表
+            description: 商户专区问题答案列表
+            tags: [ZONE]
+            operationdId: get_zone_questions
+            parameters:
+                - $ref: '#/parameters/AccessTokenOptional'
+                - $ref: '#/parameters/tenant_id_in_path'
+                - $ref: '#/parameters/offset'
+                - $ref: '#/parameters/limit'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+                - name: order_by
+                  in: query
+                  required: false
+                  type: string
+                  enum:
+                      - default
+                      - latest
+                      - visitor_count
+            responses:
+                200:
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/TenantQuestion'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+    /questions/{id}:
+        get:
+            summary: 问题详情
+            description: 问题详情 需判断是否付费
+            tags: [QUESTIONS]
+            operationdId: get_question
+            parameters:
+                - $ref: '#/parameters/AccessTokenOptional'
+                - $ref: '#/parameters/question_id_in_path'
+            responses:
+                200:
+                    description: 问题详情
+                    schema:
+                        $ref: '#/definitions/QuestionDetail'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+    /questions/{id}/answer:
+        get:
+            summary: 问题答案
+            description: 问题详情 需判断是否付费
+            tags: [QUESTIONS]
+            operationdId: get_question
+            parameters:
+                - $ref: '#/parameters/AccessTokenOptional'
+                - $ref: '#/parameters/question_id_in_path'
+            responses:
+                200:
+                    description: 问题回答详情
+                    schema:
+                        $ref: '#/definitions/AnswerWithVoiceUrl'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [open]
+    /weixin/pay:
+        post:
+            summary: 生成调用微信统一下单
+            description: 调用微信统一下单 生成预支付数据 问题/围观支付都用
+            tags: [PAY]
+            operationdId: weixin_pay
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - name: create_weixin_pay
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/CreateWeixinPay'
+            responses:
+                201:
+                    description: 微信统一下单支付信息
+                    schema:
+                        $ref: '#/definitions/Unifiedorder'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [open]
+    /questions/{id}/listen:
+        post:
+            summary: 添加听的记录,获取语音url
+            description: 添加除付费偷听以外的记录
+            tags: [OPEN_VOICES]
+            operationdId: question_listen
+            parameters:
+                - $ref: '#/parameters/question_id_in_path'
+                - name: create_question_listen
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/CreateQuestionListen'
+            responses:
+                201:
+                    description: 添加听的记录
+                    schema:
+                        $ref: '#/definitions/Voice'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+    /voices/{id}:
+        post:
+            summary: 获取语音url
+            description: 获取语音url 限制频率 6/分
+            tags: [OPEN_VOICES]
+            operationdId: get_voice
+            parameters:
+                - $ref: '#/parameters/voice_id_in_path'
+                - name: create_question_visit
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/CreateQuestionVisit'
+            responses:
+                201:
+                    description: 问题列表
+                    schema:
+                        $ref: '#/definitions/Voice'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+    /self/asks:
+        get:
+            summary: 我的提问
+            description: 我的提问
+            tags: [SELF]
+            operationdId: get_self_asks
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/source_in_query'
+                - $ref: '#/parameters/limit'
+                - $ref: '#/parameters/offset'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+            responses:
+                200:
+                    description: 问题列表 答案可选
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/SelfAskQuestionWithAnswerOptional'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [open]
+    /recommend/words/search:
+        get:
+            summary: 联想词搜索 
+            description: 联想词搜索 
+            tags: [OPEN_SEARCH]
+            operationdId: get_web_recommend_word_search
+            parameters:
+                - $ref: '#/parameters/key_word_in_query'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+            responses:
+                200:
+                    description: 联想词信息列表
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/WordSearch'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
