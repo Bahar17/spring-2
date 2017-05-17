@@ -10,16 +10,14 @@ from __future__ import absolute_import
 import tornado.web
 from tornado.httputil import HTTPHeaders
 from werkzeug.datastructures import MultiDict
-from datetime import date
 
 import json
 import six
 from functools import wraps
-from services.verification import verify_request
-from model.user import User
 from jsonschema import Draft4Validator
 
-from .schemas import validators, scopes, normalize
+from . import before_request, after_request
+from .schemas import validators, scopes, normalize, filters
 
 
 class ValidatorAdaptor(object):
@@ -34,7 +32,7 @@ class ValidatorAdaptor(object):
             return value
 
     def type_convert(self, obj):
-        if obj is None:
+        if obj is None or not obj:
             return None
         if isinstance(obj, (str, unicode, basestring)):
             obj = MultiDict(json.loads(obj))
@@ -72,79 +70,103 @@ class ValidatorAdaptor(object):
         errors = list(e.message for e in self.validator.iter_errors(value))
         return normalize(self.validator.schema, value)[0], errors
 
-class UserInfo(object):
-    _scopes = None
-    client_id = None
-    _account = None
+def request_validate(obj):
+    request = obj.request
+    endpoint = obj.endpoint
+    user_info = obj.current_user
+    if (endpoint, request.method) in scopes and not set(
+            scopes[(endpoint, request.method)]
+    ).issubset(set(user_info.scopes)):
+        raise tornado.web.HTTPError(403)
 
-    def __init__(self, user_id, authorization, blueprint):
-        self.authorization = authorization
-        self.user_id = user_id
-        self.blueprint = blueprint
-        self.valid = False
+    method = request.method
+    if method == 'HEAD':
+        method = 'GET'
+    locations = validators.get((endpoint, method), {})
+    for location, schema in six.iteritems(locations):
+        if location == 'json':
+            value = getattr(request, 'body', MultiDict())
+        elif location == 'args':
+            value = getattr(request, 'query_arguments', MultiDict())
+            for k,v in value.iteritems():
+                if isinstance(v, list) and len(v) == 1:
+                    value[k] = v[0]
+            value = MultiDict(value)
+        else:
+            value = getattr(request, location, MultiDict())
+        validator = ValidatorAdaptor(schema)
+        result, reasons = validator.validate(value)
+        if reasons:
+            raise tornado.web.HTTPError(422, message='Unprocessable Entity',
+                                        reason=json.dumps(reasons))
+        setattr(obj, location, result)
 
-    @property
-    def scopes(self):
-        if self._scopes is None:
-            self._scopes = self._loader()
-        return self._scopes
 
-    def _loader(self):
-        valid, token_info = verify_request(self.authorization, self.blueprint)
-        self.valid = valid
-        if valid and token_info:
-            if isinstance(token_info, list):
-                scopes = set(token_info) - set(['open'])
-                return list(scopes)
-            self.client_id = token_info.get('client_id', 'weixin')
-            return token_info.get('scopes', [])
-        # TODO: test return open, panel
-        return ['open', 'panel']
-        # return []
+def response_filter(obj, resp):
+    request = obj.request
+    endpoint = obj.endpoint
+    method = request.method
+    if method == 'HEAD':
+        method = 'GET'
+    headers = None
+    status = None
+    if isinstance(resp, tuple):
+        resp, status, headers = unpack(resp)
+    filter = filters.get((endpoint, method), None)
+    if filter:
+        if len(filter) == 1:
+            if six.PY3:
+                status = list(filter.keys())[0]
+            else:
+                status = filter.keys()[0]
 
-    @property
-    def account(self):
-        if self._account is None:
-            if self.valid and self.user_id:
-                # TODO: test
-                self._account = User.query.get(1)
-        return self._account
+        schemas = filter.get(status)
+        if not schemas:
+            # return resp, status, headers
+            raise tornado.web.HTTPError(
+                500, message='`%d` is not a defined status code.' % status)
 
-def request_validate(view):
+        resp, errors = normalize(schemas['schema'], resp)
+        if schemas['headers']:
+            headers, header_errors = normalize(
+                {'properties': schemas['headers']}, headers)
+            errors.extend(header_errors)
+        if errors:
+            raise tornado.web.HTTPError(
+                500, message='Expectation Failed',
+                reason=json.dumps(errors))
+    obj.set_status(status)
+    obj.set_headers(headers)
+    obj.write(resp)
+
+
+def validate_filter(view):
 
     @wraps(view)
     def wrapper(*args, **kwargs):
         self = view.im_self
-        request = self.request
-        endpoint = self.endpoint
-        user_info = self.current_user
-        if (endpoint, request.method) in scopes and not set(
-                scopes[(endpoint, request.method)]
-        ).issubset(set(user_info.scopes)):
-            raise tornado.web.HTTPError(403)
-
-        method = request.method
-        if method == 'HEAD':
-            method = 'GET'
-        locations = validators.get((endpoint, method), {})
-        for location, schema in six.iteritems(locations):
-            if location == 'json':
-                value = getattr(request, 'body', MultiDict())
-            elif location == 'args':
-                value = getattr(request, 'query_arguments', MultiDict())
-                for k,v in value.iteritems():
-                    if isinstance(v, list) and len(v) == 1:
-                        value[k] = v[0]
-                value = MultiDict(value)
-            else:
-                value = getattr(request, location, MultiDict())
-            validator = ValidatorAdaptor(schema)
-            result, reasons = validator.validate(value)
-            if reasons:
-                raise tornado.web.HTTPError(422, message='Unprocessable Entity',
-                                            reason=reasons[0])
-            setattr(self, location, result)
-
-        return view(*args, **kwargs)
-
+        request_validate(self)
+        before_request(self)
+        resp = view(*args, **kwargs)
+        after_request(self)
+        response_filter(self, resp)
     return wrapper
+
+
+def unpack(value):
+    if not isinstance(value, tuple):
+        return value, 200, {}
+
+    try:
+        data, code, headers = value
+        return data, code, headers
+    except ValueError:
+        pass
+
+    try:
+        data, code = value
+        return data, code, {}
+    except ValueError:
+        pass
+
+    return value, 200, {}

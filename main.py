@@ -9,7 +9,7 @@ import tornado.websocket
 from core.settings import load_tornado_settings
 from core import db, migrate
 
-modules = ['base', 'panel', 'ws', 'v2']
+modules = ['base', 'panel', 'ws']
 config = load_tornado_settings(*modules)
 
 

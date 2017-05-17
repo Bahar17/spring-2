@@ -1,11 +1,11 @@
 swagger: '2.0'
 info:
-    title: Fenda V2 API
+    title: LARP GAME PANEL API
     version: '1.0.0'
 schemes:
     - http
 basePath:
-    /v2
+    /panel
 consumes:
     - application/json
 profuces:
@@ -444,21 +444,72 @@ definitions:
                 format: int32
             is_public:
                 type: boolean
-    CreateQuestion:
-        required:
-            - content
+    LarpGame:
         properties:
-            form_id:
+            name:
                 type: string
-            is_public:
-                type: boolean
-            content:
-                $ref: '#/definitions/content'
-            images:
-                type: array
-                maxItems: 3
-                items:
-                    type: string
+            icon:
+                type: string
+            description:
+                type: string
+            summary:
+                type: string
+            others:
+                type: string
+            price:
+                type: integer
+                format: int32
+            min_required_num:
+                type: integer
+                format: int32
+            max_required_num:
+                type: integer
+                format: int32
+            ap_num:
+                type: integer
+                format: int32
+            player_manual:
+                type: string
+            manager_manual:
+                type: string
+            mission_manual:
+                type: string
+            type:
+                type: string
+    CreateLarpGame:
+        required:
+            - name
+        properties:
+            name:
+                type: string
+            icon:
+                type: string
+            description:
+                type: string
+            summary:
+                type: string
+            others:
+                type: string
+            price:
+                type: integer
+                format: int32
+            min_required_num:
+                type: integer
+                format: int32
+            max_required_num:
+                type: integer
+                format: int32
+            ap_num:
+                type: integer
+                format: int32
+            player_manual:
+                type: string
+            manager_manual:
+                type: string
+            mission_manual:
+                type: string
+            type:
+                type: string
     CreateWeixinPay:
         required:
             - order_type
@@ -697,300 +748,51 @@ securityDefinitions:
             panel: 后台API
             backend: backend API
 paths:
-    /tags/{id}/accounts:
+    /games:
         get:
-            summary: 单个标签人物
-            description: 单个标签人物
-            tags: [TAG]
-            operationdId: get_tag_accounts
-            parameters:
-                - $ref: '#/parameters/AccessTokenOptional'
-                - $ref: '#/parameters/int_id_in_path'
-                - $ref: '#/parameters/source_in_query'
-                - $ref: '#/parameters/offset'
-                - $ref: '#/parameters/limit'
-                - $ref: '#/parameters/page'
-                - $ref: '#/parameters/per_page'
-            responses:
-                200:
-                    schema:
-                        type: array
-                        items:
-                            $ref: '#/definitions/AccountLite'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
-    /accounts/handpick:
-        get:
-            summary: 小程序首页精选人物
-            description: 小程序首页精选
-            tags: [ACCOUNTS]
-            operationdId: get_accounts_handpic
-            parameters:
-                - $ref: '#/parameters/AccessTokenOptional'
-                - $ref: '#/parameters/offset'
-                - $ref: '#/parameters/limit'
-                - $ref: '#/parameters/page'
-                - $ref: '#/parameters/per_page'
-            responses:
-                200:
-                    schema:
-                        type: array
-                        items:
-                            $ref: '#/definitions/AccountLite'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
-    /accounts/{id}:
-        get:
-            summary: 用户信息
-            description: 用户信息
-            tags: [ACCOUNTS]
-            operationdId: get_account
-            parameters:
-                - $ref: '#/parameters/account_id_in_path'
-            responses:
-                200:
-                    description: 用户信息
-                    schema:
-                        $ref: '#/definitions/Account'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
-    /accounts/{id}/answers:
-        get:
-            summary: 某人回答过的公开的问题
-            description: 某人回答过的公开问题
-            tags: [QUESTIONS]
-            operationdId: get_account_questions
-            parameters:
-                - $ref: '#/parameters/AccessTokenOptional'
-                - $ref: '#/parameters/account_id_in_path'
-                - $ref: '#/parameters/order_type_in_query'
-                - $ref: '#/parameters/start_time_in_query'
-                - $ref: '#/parameters/end_time_in_query'
-                - $ref: '#/parameters/page'
-                - $ref: '#/parameters/per_page'
-            responses:
-                200:
-                    description: 问题列表
-                    schema:
-                        type: array
-                        items:
-                            $ref: '#/definitions/QuestionWithAnswer'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
-    /accounts/{id}/questions:
-        post:
-            summary: 向某人提问
-            description: 向某人提问
-            tags: [QUESTIONS]
-            operationdId: create_question
+            summary: 游戏列表
+            description: 返回游戏列表
+            tags: [GAMES]
+            operationdId: get_games
             parameters:
                 - $ref: '#/parameters/AccessToken'
-                - $ref: '#/parameters/account_id_in_path'
-                - name: create_question
-                  in: body
-                  required: true
-                  schema:
-                      $ref: '#/definitions/CreateQuestion'
-            responses:
-                201:
-                    description: 问题详情
-                    schema:
-                        $ref: '#/definitions/QuestionBeforeAnswered'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
-            security:
-                - OAuth2: [open]
-    /zones/{tenant_id}/answers:
-        get:
-            summary: 专区问题答案列表
-            description: 商户专区问题答案列表
-            tags: [ZONE]
-            operationdId: get_zone_questions
-            parameters:
-                - $ref: '#/parameters/AccessTokenOptional'
-                - $ref: '#/parameters/tenant_id_in_path'
                 - $ref: '#/parameters/offset'
                 - $ref: '#/parameters/limit'
                 - $ref: '#/parameters/page'
                 - $ref: '#/parameters/per_page'
-                - name: order_by
-                  in: query
-                  required: false
-                  type: string
-                  enum:
-                      - default
-                      - latest
-                      - visitor_count
             responses:
                 200:
+                    description: 游戏列表
                     schema:
                         type: array
                         items:
-                            $ref: '#/definitions/TenantQuestion'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
-    /questions/{id}:
-        get:
-            summary: 问题详情
-            description: 问题详情 需判断是否付费
-            tags: [QUESTIONS]
-            operationdId: get_question
-            parameters:
-                - $ref: '#/parameters/AccessTokenOptional'
-                - $ref: '#/parameters/question_id_in_path'
-            responses:
-                200:
-                    description: 问题详情
-                    schema:
-                        $ref: '#/definitions/QuestionDetail'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
-    /questions/{id}/answer:
-        get:
-            summary: 问题答案
-            description: 问题详情 需判断是否付费
-            tags: [QUESTIONS]
-            operationdId: get_question
-            parameters:
-                - $ref: '#/parameters/AccessTokenOptional'
-                - $ref: '#/parameters/question_id_in_path'
-            responses:
-                200:
-                    description: 问题回答详情
-                    schema:
-                        $ref: '#/definitions/AnswerWithVoiceUrl'
+                            $ref: '#/definitions/LarpGame'
                 default:
                     description: Unexpected Error
                     schema:
                         $ref: '#/definitions/Error'
             security:
-                - OAuth2: [open]
-    /weixin/pay:
+                - OAuth2: [panel]
         post:
-            summary: 生成调用微信统一下单
-            description: 调用微信统一下单 生成预支付数据 问题/围观支付都用
-            tags: [PAY]
-            operationdId: weixin_pay
+            summary: 创建一个新游戏
+            description: 创建一个新游戏
+            tags: [GAMES]
+            operationdId: create_game
             parameters:
                 - $ref: '#/parameters/AccessToken'
-                - name: create_weixin_pay
+                - name: create_game
                   in: body
                   required: true
                   schema:
-                      $ref: '#/definitions/CreateWeixinPay'
+                      $ref: '#/definitions/CreateLarpGame'
             responses:
                 201:
-                    description: 微信统一下单支付信息
+                    description: 游戏详情
                     schema:
-                        $ref: '#/definitions/Unifiedorder'
+                        $ref: '#/definitions/LarpGame'
                 default:
                     description: Unexpected Error
                     schema:
                         $ref: '#/definitions/Error'
             security:
-                - OAuth2: [open]
-    /questions/{id}/listen:
-        post:
-            summary: 添加听的记录,获取语音url
-            description: 添加除付费偷听以外的记录
-            tags: [OPEN_VOICES]
-            operationdId: question_listen
-            parameters:
-                - $ref: '#/parameters/question_id_in_path'
-                - name: create_question_listen
-                  in: body
-                  required: true
-                  schema:
-                      $ref: '#/definitions/CreateQuestionListen'
-            responses:
-                201:
-                    description: 添加听的记录
-                    schema:
-                        $ref: '#/definitions/Voice'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
-    /voices/{id}:
-        post:
-            summary: 获取语音url
-            description: 获取语音url 限制频率 6/分
-            tags: [OPEN_VOICES]
-            operationdId: get_voice
-            parameters:
-                - $ref: '#/parameters/voice_id_in_path'
-                - name: create_question_visit
-                  in: body
-                  required: true
-                  schema:
-                      $ref: '#/definitions/CreateQuestionVisit'
-            responses:
-                201:
-                    description: 问题列表
-                    schema:
-                        $ref: '#/definitions/Voice'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
-    /self/asks:
-        get:
-            summary: 我的提问
-            description: 我的提问
-            tags: [SELF]
-            operationdId: get_self_asks
-            parameters:
-                - $ref: '#/parameters/AccessToken'
-                - $ref: '#/parameters/source_in_query'
-                - $ref: '#/parameters/limit'
-                - $ref: '#/parameters/offset'
-                - $ref: '#/parameters/page'
-                - $ref: '#/parameters/per_page'
-            responses:
-                200:
-                    description: 问题列表 答案可选
-                    schema:
-                        type: array
-                        items:
-                            $ref: '#/definitions/SelfAskQuestionWithAnswerOptional'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
-            security:
-                - OAuth2: [open]
-    /recommend/words/search:
-        get:
-            summary: 联想词搜索 
-            description: 联想词搜索 
-            tags: [OPEN_SEARCH]
-            operationdId: get_web_recommend_word_search
-            parameters:
-                - $ref: '#/parameters/key_word_in_query'
-                - $ref: '#/parameters/page'
-                - $ref: '#/parameters/per_page'
-            responses:
-                200:
-                    description: 联想词信息列表
-                    schema:
-                        type: array
-                        items:
-                            $ref: '#/definitions/WordSearch'
-                default:
-                    description: Unexpected Error
-                    schema:
-                        $ref: '#/definitions/Error'
+                - OAuth2: [panel]
