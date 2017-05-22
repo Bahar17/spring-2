@@ -11,441 +11,152 @@ consumes:
 profuces:
     - application/json
 definitions:
-    id:
-        type: integer
-        format: int32
-    offer:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 2000000
-    count:
-        type: integer
-        format: int32
-        default: 0
-    answer_id:
-        type: string
-        minLength: 16
-        maxLength: 32
-    question_id:
-        type: string
-        minLength: 16
-        maxLength: 32
-    voice_id:
-        type: string
-        minLength: 16
-        maxLength: 32
-    name:
-        type: string
-        minLength: 1
-        maxLength: 64
-    title:
-        type: string
-        minLength: 2
-        maxLength: 18
-    introduction:
-        type: string
-        minLength: 2
-        maxLength: 128
-    content:
-        type: string
-        minLength: 2
-        maxLength: 1024
-    url:
-        type: string
-        minLength: 5
-        maxLength: 256
-    mobile:
-        type: string
-        minLength: 11
-        maxLength: 14
-    datetime:
-        type: string
-        format: datetime
-    pay_type:
-        type: string
-        enum:
-            - weixin_pay
-    WordSearch:
-        properties:
-            account_id:
-                type: integer
-            name:
-                type: string
-    TagLite:
+    GamePlace:
         properties:
             id:
-                type: integer
-            name:
-                type: string
-    AccountLite:
-        required:
-            - id
-            - nickname
-            - avatar
-        properties:
-            id:
-                $ref: '#/definitions/id'
-            nickname:
-                type: string
-                minLength: 1
-                maxLength: 64
-            price:
                 type: integer
                 format: int32
-            title:
-                $ref: '#/definitions/title'
-            avatar:
-                $ref: '#/definitions/url'
-            is_verified:
+            game_id:
+                type: string
+            name:
+                type: string
+            is_hiding:
                 type: boolean
-            answers_count:
+            owner:
                 type: integer
                 format: int32
-    Account:
-        required:
-            - id
-            - nickname
-            - avatar
-        properties:
-            id:
-                $ref: '#/definitions/id'
-            nickname:
-                type: string
-                minLength: 1
-                maxLength: 64
-            title:
-                $ref: '#/definitions/title'
-            avatar:
-                $ref: '#/definitions/url'
-            introduction:
-                $ref: '#/definitions/introduction'
-            price:
-                type: integer
-                format: int32
-            answers_count:
-                type: integer
-                format: int32
-            followers_count:
-                type: integer
-                format: int32
-            tags:
+            hiding_keys:
                 type: array
                 items:
-                    $ref: '#/definitions/TagLite'
-            price:
-                type: integer
-                format: int32
-            is_receive_image_question:
-                type: boolean
-    question_status:
-        type: string
-        enum:
-            - draft
-            - paid
-            - review
-            - rejected
-            - succeed
-            - refused
-            - closed
-            - refunded
-            - answered
-            - revoked
-    question_type:
-        type: string
-        enum:
-            - talk
-            - fenda
-            - normal
-            - tenant
-            - recover
-            - top_line
-            - broadcast
-            - commonweal
-            - long_voice
-            - free_long_voice
-    QuestionRefuseReason:
-        properties:
-            content:
-                type: string
-    Question:
-        required:
-            - id
-            - type
-            - offer
-            - status
-            - content
-            - account_id
-            - respondent_id
-            - date_created
-            - date_updated
-        properties:
-            id:
-                $ref: '#/definitions/question_id'
-            offer:
-                $ref: '#/definitions/offer'
-            content:
-                $ref: '#/definitions/content'
-            account_id:
-                $ref: '#/definitions/id'
-            respondent_id:
-                $ref: '#/definitions/id'
-            status:
-                $ref: '#/definitions/question_status'
+                    type: string
             type:
-                $ref: '#/definitions/question_type'
-            date_created:
-                $ref: '#/definitions/datetime'
-            date_updated:
-                $ref: '#/definitions/datetime'
-    Topic:
-        properties:
-            id:
-                type: integer
-            name:
                 type: string
-    QuestionDetail:
-        description: 自己提出的问题才可调用
-        allOf:
-            - $ref: '#/definitions/Question'
-            - type: object
-        properties:
-            answer:
-                $ref: '#/definitions/Answer'
-            asker:
-                $ref: '#/definitions/AccountLite'
-            respondent:
-                $ref: '#/definitions/AccountLite'
-            visitor_count:
-                $ref: '#/definitions/count'
-            listenings_count:
-                $ref: '#/definitions/count'
-            images_count:
-                type: integer
-                format: int32
-            bonus:
-                description: 当前用户赞赏金额
-                type: integer
-                format: int32
-            bonuses:
-                description: 被赞赏金额
-                type: integer
-                format: int32
-            has_quota:
-                type: boolean
-            topics:
+            allow_type:
+                type: string
+            allow_ids:
                 type: array
                 items:
-                    $ref: '#/definitions/Topic'
-            topic_short_title:
-                type: string
-            refuse_reason:
-                $ref: '#/definitions/QuestionRefuseReason'
-            is_enable_inquiry:
-                type: boolean
-            has_discussions:
-                type: boolean
-            discussions_count:
-                type: integer
-                format: int32
-            is_public:
-                type: boolean
-            is_enable_revoke:
-                type: boolean
-            is_free:
-                type: boolean
-            free_type:
-                type: string
-            remaining_seconds:
-                type: integer
-                format: int32
-    QuestionWithAnswer:
-        description: 已经回答的公开的问题 我回答的问题列表
-        allOf:
-            - $ref: '#/definitions/Question'
-            - type: object
+                    type: integer
+                    format: int32
+    CreateGamePlace:
         properties:
-            asker:
-                $ref: '#/definitions/AccountLite'
-            respondent:
-                $ref: '#/definitions/AccountLite'
-            answer:
-                $ref: '#/definitions/AnswerInPublicList'
-            discussions_count:
-                type: integer
-                format: int32
-            listenings_count:
-                $ref: '#/definitions/count'
-            images_count:
-                type: integer
-                format: int32
-            is_sticky:
+            name:
+                type: string
+            is_hiding:
                 type: boolean
-            is_free:
-                type: boolean
-            free_type:
-                type: string
-            remaining_seconds:
+            owner:
                 type: integer
                 format: int32
-    TenantQuestion:
-        allOf:
-            - type: object
-            - $ref: '#/definitions/QuestionWithAnswer'
-    CreateQuestionVisit:
-        required:
-            - question_id
-        properties:
-            question_id:
-                $ref: '#/definitions/question_id'
-            source:
-                type: string
-                description: 听的来源 付费偷听/好友免费听/分答问/限免听/赞赏听/讨论
-                enum:
-                    - share
-                    - fenda
-                    - free
-                    - bonus
-                    - talk
-            free_key:
-                type: string
-            rewarder_id:
-                description: 打赏者id
-                type: integer
-    CreateQuestionListen:
-        required:
-            - source
-            - voice_id
-        properties:
-            uid:
-                type: string
-            voice_id:
-                type: string
-            source:
-                type: string
-                description: 听的来源
-                enum:
-                    - android
-                    - yidian
-                    - weixin
-                    - web
-                    - ios
-    Answer:
-        properties:
-            id:
-                $ref: '#/definitions/answer_id'
-            voice_id:
-                type: string
-            duration:
-                type: integer
-                format: int32
-            question_id:
-                $ref: '#/definitions/question_id'
-            content:
-                type: string
-            is_reanswered:
-                type: boolean
-            status:
-                type: string
-                enum:
-                    - rejected
-            is_liked:
-                type: boolean
-            likings_count:
-                type: integer
-                format: int32
+            hiding_keys:
+                type: array
+                items:
+                    type: string
             type:
-               type: string
-               enum:
-                   - text
-                   - answer
-            date_updated:
-                $ref: '#/definitions/datetime'
-    AnswerWithVoiceUrl:
-        allOf:
-            - $ref: '#/definitions/Answer'
-            - type: object
-        properties:
-            voice_url:
                 type: string
-    AnswerInPublicList:
-        properties:
-            id:
-                $ref: '#/definitions/answer_id'
-            question_id:
-                $ref: '#/definitions/question_id'
-            voice_id:
+            allow_type:
                 type: string
-            is_liked:
+            allow_ids:
+                type: array
+                items:
+                    type: integer
+                    format: int32
+    UpdateGamePlace:
+        properties:
+            name:
+                type: string
+            is_hiding:
                 type: boolean
-            likings_count:
+            owner:
                 type: integer
                 format: int32
-            duration:
-                type: integer
-                format: int32
-            content:
-                type: string
-            status:
-                type: string
-                enum:
-                    - rejected
-            date_updated:
-                $ref: '#/definitions/datetime'
-    QuestionBeforeAnswered:
-        required:
-            - id
-            - type
-            - offer
-            - status
-            - content
-            - account_id
-            - respondent_id
-            - date_created
-            - date_updated
-        allOf:
-            - $ref: '#/definitions/Question'
-            - type: object
-        properties:
-            images_count:
-                type: integer
-                format: int32
-            asker:
-                $ref: '#/definitions/AccountLite'
-            respondent:
-                $ref: '#/definitions/AccountLite'
-    SelfAskQuestionWithAnswerOptional:
-        description: 我问列表
-        required:
-            - id
-            - offer
-            - content
-            - status
-            - date_created
-        properties:
-            id:
-                $ref: '#/definitions/question_id'
-            offer:
-                $ref: '#/definitions/offer'
-            content:
-                $ref: '#/definitions/content'
-            respondent:
-                $ref: '#/definitions/AccountLite'
-            status:
-                $ref: '#/definitions/question_status'
+            hiding_keys:
+                type: array
+                items:
+                    type: string
             type:
-                $ref: '#/definitions/question_type'
-            date_created:
-                $ref: '#/definitions/datetime'
-            date_updated:
-                $ref: '#/definitions/datetime'
-            images_count:
+                type: string
+            allow_type:
+                type: string
+            allow_ids:
+                type: array
+                items:
+                    type: integer
+                    format: int32
+    GameRole:
+        properties:
+            id:
                 type: integer
                 format: int32
-            is_public:
-                type: boolean
+            game_id:
+                type: string
+            name:
+                type: string
+            _avatar:
+                type: string
+            true_name:
+                type: string
+            profession_id:
+                type: integer
+                format: int32
+            hidden_profession_id:
+                type: integer
+                format: int32
+            summary:
+                type: string
+            desc:
+                type: string
+            play_script:
+                type: array
+                items:
+                    type: string
+    CreateGameRole:
+        properties:
+            name:
+                type: string
+            _avatar:
+                type: string
+            true_name:
+                type: string
+            profession_id:
+                type: integer
+                format: int32
+            hidden_profession_id:
+                type: integer
+                format: int32
+            summary:
+                type: string
+            desc:
+                type: string
+            play_script:
+                type: array
+                items:
+                    type: string
+    UpdateGameRole:
+        properties:
+            name:
+                type: string
+            _avatar:
+                type: string
+            true_name:
+                type: string
+            profession_id:
+                type: integer
+                format: int32
+            hidden_profession_id:
+                type: integer
+                format: int32
+            summary:
+                type: string
+            desc:
+                type: string
+            play_script:
+                type: array
+                items:
+                    type: string
     LarpGame:
         properties:
+            id:
+                type: string
             name:
                 type: string
             icon:
@@ -510,93 +221,52 @@ definitions:
                 type: string
             type:
                 type: string
-    CreateWeixinPay:
-        required:
-            - order_type
-            - trade_type
-            - target_type
-            - target_id
+    UpdateLarpGame:
         properties:
-            order_type:
+            name:
                 type: string
-                description: 订单类型 提问/偷听/赞赏/悬赏/小讲
-                enum:
-                    - ask
-                    - visit
-                    - bonus
-                    - recourse
-                    - speech
-            target_type:
+            icon:
                 type: string
-                enum:
-                    - question
-                    - recourse
-                    - speech
-            target_id:
+            description:
                 type: string
-            trade_type:
+            summary:
                 type: string
-                default: NATIVE
-                enum:
-                    - JSAPI
-                    - NATIVE
-                    - APP
-    Unifiedorder:
-        required:
-            - return_code
-        properties:
-            return_code:
+            others:
                 type: string
-                enum:
-                    - SUCCESS
-                    - FAIL
-            return_msg:
-                description: 错误原因
+            price:
+                type: integer
+                format: int32
+            min_required_num:
+                type: integer
+                format: int32
+            max_required_num:
+                type: integer
+                format: int32
+            ap_num:
+                type: integer
+                format: int32
+            player_manual:
                 type: string
-            appid:
+            manager_manual:
                 type: string
-            mch_type:
+            mission_manual:
                 type: string
-                enum:
-                    - guokr
-                    - zaihang
-            device_info:
+            type:
                 type: string
-            nonce_str:
-                type: string
-            sign:
-                type: string
-            result_code:
-                description: 业务结果
-                type: string
-                enum:
-                    - SUCCESS
-                    - FAIL
-            err_code:
-                type: string
-            err_code_des:
-                type: string
-            trade_type:
-                type: string
-                enum:
-                    - JSAPI
-                    - NATIVE
-                    - APP
-            prepay_id:
-                type: string
-            code_url:
-                description: trade_type为NATIVE是有返回
-                type: string
-            time_stamp:
-                type: string
-    Voice:
-        required:
-            - id
-            - url
+    Profession:
         properties:
             id:
+                type: integer
+                format: int32
+            name:
                 type: string
-            url:
+    CreateProfession:
+        properties:
+            name:
+                type: string
+    UpdateProfession:
+        properties:
+            name:
                 type: string
     Success:
         properties:
@@ -635,9 +305,21 @@ parameters:
         in: path
         required: true
         type: integer
-    account_id_in_path:
-        description: account id in path
+    string_id_in_path:
+        description: string id in path
         name: id
+        in: path
+        required: true
+        type: string
+    role_id_in_path:
+        description: role id in path
+        name: role_id
+        in: path
+        required: true
+        type: integer
+    place_id_in_path:
+        description: place id in path
+        name: place_id
         in: path
         required: true
         type: integer
@@ -790,6 +472,365 @@ paths:
                     description: 游戏详情
                     schema:
                         $ref: '#/definitions/LarpGame'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /games/{id}:
+        get:
+            summary: 游戏详情
+            tags: [GAMES]
+            operationdId: get_larp_name
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/string_id_in_path'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/LarpGame'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        put:
+            summary: 帖子游戏详情
+            tags: [GAMES]
+            operationdId: put_larp_name
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/string_id_in_path'
+                - name: update_post
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/UpdateLarpGame'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/LarpGame'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /games/{id}/roles:
+        get:
+            summary: 游戏角色列表
+            description: 游戏角色列表
+            tags: [GAMES]
+            operationdId: get_games_roles
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/string_id_in_path'
+                - $ref: '#/parameters/offset'
+                - $ref: '#/parameters/limit'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+            responses:
+                200:
+                    description: 游戏角色列表
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/GameRole'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        post:
+            summary: 创建一个新游戏角色
+            description: 创建一个新游戏角色
+            tags: [GAMES]
+            operationdId: create_game
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/string_id_in_path'
+                - name: create_game
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/CreateGameRole'
+            responses:
+                201:
+                    description: 游戏详情
+                    schema:
+                        $ref: '#/definitions/GameRole'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /roles/{role_id}:
+        get:
+            summary: 游戏角色详情
+            tags: [GAMES]
+            operationdId: get_game_roles
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/role_id_in_path'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/GameRole'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        put:
+            summary: 更新游戏角色详情
+            tags: [GAMES]
+            operationdId: put_game_role
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/role_id_in_path'
+                - name: update_game_roles
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/UpdateGameRole'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/GameRole'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        delete:
+            summary: 删除游戏角色
+            tags: [GAMES]
+            operationdId: delete_game_role
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/role_id_in_path'
+            responses:
+                204:
+                    schema:
+                        $ref: '#/definitions/Success'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /games/{id}/places:
+        get:
+            summary: 游戏地点列表
+            description: 游戏地点列表
+            tags: [GAMES]
+            operationdId: get_games_places
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/string_id_in_path'
+                - $ref: '#/parameters/offset'
+                - $ref: '#/parameters/limit'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+            responses:
+                200:
+                    description: 游戏地点列表
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/GamePlace'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        post:
+            summary: 创建一个新游戏地点
+            description: 创建一个新游戏地点
+            tags: [GAMES]
+            operationdId: create_game
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/string_id_in_path'
+                - name: create_game
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/CreateGamePlace'
+            responses:
+                201:
+                    description: 游戏详情
+                    schema:
+                        $ref: '#/definitions/GamePlace'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /places/{place_id}:
+        get:
+            summary: 游戏地点详情
+            tags: [GAMES]
+            operationdId: get_game_places
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/place_id_in_path'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/GamePlace'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        put:
+            summary: 更新游戏地点详情
+            tags: [GAMES]
+            operationdId: put_game_place
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/place_id_in_path'
+                - name: update_game_places
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/UpdateGamePlace'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/GamePlace'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        delete:
+            summary: 删除游戏地点
+            tags: [GAMES]
+            operationdId: delete_game_place
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/place_id_in_path'
+            responses:
+                204:
+                    schema:
+                        $ref: '#/definitions/Success'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /professions:
+        get:
+            summary: 职业
+            description: 职业
+            tags: [GAMES]
+            operationdId: get_professions
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/offset'
+                - $ref: '#/parameters/limit'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+            responses:
+                200:
+                    description: 职业列表
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Profession'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        post:
+            summary: 创建职业
+            description: 创建职业
+            tags: [GAMES]
+            operationdId: create_professions
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - name: create_profession
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/CreateProfession'
+            responses:
+                201:
+                    description: 职业
+                    schema:
+                        $ref: '#/definitions/Profession'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /professions/{id}:
+        get:
+            summary: 职业详情
+            tags: [GAMES]
+            operationdId: get_professions
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/Profession'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        put:
+            summary: 更新游戏角色详情
+            tags: [GAMES]
+            operationdId: put_professions
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+                - name: update_game_roles
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/UpdateProfession'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/Profession'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        delete:
+            summary: 删除职业
+            tags: [GAMES]
+            operationdId: delete_professions
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+            responses:
+                204:
+                    schema:
+                        $ref: '#/definitions/Success'
                 default:
                     description: Unexpected Error
                     schema:

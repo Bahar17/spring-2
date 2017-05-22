@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from sqlalchemy import sql
 from core import db, Model, DateTime, JsonText, generator_string_id
 
@@ -37,7 +38,7 @@ class LarpGame(Model):
     id = db.Column(db.String(32), primary_key=True, default=game_id_generator)
     name = db.Column(db.String(64), nullable=False)
     icon = db.Column(db.String(256), nullable=True)
-    desc = db.Column(JsonText, nullable=True)
+    desc = db.Column(JsonText, default={})
     # summary
     # desc
     # other
@@ -48,7 +49,7 @@ class LarpGame(Model):
     max_required_num = db.Column(db.Integer(), nullable=False,
                                  server_default=u'0')
     ap_num = db.Column(db.Integer(), nullable=False, server_default=u'10')
-    manual = db.Column(JsonText, nullable=True)
+    manual = db.Column(JsonText, default={})
     # player_manual
     # manager_manual = db.Column(db.Text(), nullable=True)
     # mission_manual = db.Column(db.Text(), nullable=True)
@@ -61,6 +62,97 @@ class LarpGame(Model):
     date_updated = db.Column(DateTime,
                              nullable=False, index=True,
                              server_default=db.func.current_timestamp())
+
+    @property
+    def manager_manual(self):
+        if self.manual:
+            return self.manual.get('manager_manual', '')
+        return ''
+
+    @manager_manual.setter
+    def manager_manual(self, value):
+        if self.manual:
+            manual = self.manual.copy()
+            manual.update(manager_manual=value)
+            self.manual = manual
+        else:
+            self.manual = dict(manager_manual=value)
+
+    @property
+    def player_manual(self):
+        if self.manual:
+            return self.manual.get('player_manual', '')
+        return ''
+
+    @player_manual.setter
+    def player_manual(self, value):
+        if self.manual:
+            manual = self.manual.copy()
+            manual.update(player_manual=value)
+            self.manual = manual
+        else:
+            self.manual = dict(player_manual=value)
+
+    @property
+    def mission_manual(self):
+        if self.manual:
+            return self.manual.get('mission_manual', '')
+        return ''
+
+    @mission_manual.setter
+    def mission_manual(self, value):
+        if self.manual:
+            manual = self.manual.copy()
+            manual.update(mission_manual=value)
+            self.manual = manual
+        else:
+            self.manual = dict(mission_manual=value)
+
+    @property
+    def description(self):
+        if self.desc:
+            return self.desc.get('description', '')
+        return ''
+
+    @description.setter
+    def description(self, value):
+        if self.desc:
+            desc = self.desc.copy()
+            desc.update(description=value)
+            self.desc = desc
+        else:
+            self.desc = dict(description=value)
+
+    @property
+    def summary(self):
+        if self.desc:
+            return self.desc.get('summary', '')
+        return ''
+
+    @summary.setter
+    def summary(self, value):
+        if self.desc:
+            desc = self.desc.copy()
+            desc.update(summary=value)
+            self.desc = desc
+        else:
+            self.desc = dict(summary=value)
+
+    @property
+    def others(self):
+        if self.desc:
+            return self.desc.get('others', '')
+        return ''
+
+    @others.setter
+    def others(self, value):
+        if self.desc:
+            desc = self.desc.copy()
+            desc.update(others=value)
+            self.desc = desc
+        else:
+            self.desc = dict(others=value)
+
 
 class GameRole(Model):
     '''
@@ -105,6 +197,36 @@ class GameRole(Model):
     date_updated = db.Column(DateTime,
                              nullable=False, index=True,
                              server_default=db.func.current_timestamp())
+
+    @property
+    def summary(self):
+        if self.character:
+            return self.character.get('summary', '')
+        return ''
+
+    @summary.setter
+    def summary(self, value):
+        if self.character:
+            character = self.character.copy()
+            character.update(summary=value)
+            self.character = character
+        else:
+            self.character = dict(summary=value)
+
+    @property
+    def desc(self):
+        if self.character:
+            return self.character.get('desc', '')
+        return ''
+
+    @desc.setter
+    def desc(self, value):
+        if self.character:
+            character = self.character.copy()
+            character.update(desc=value)
+            self.character = character
+        else:
+            self.character = dict(desc=value)
 
 
 class RoleProfession(Model):

@@ -6,18 +6,11 @@ import importlib
 from os import path, environ as _env
 
 settings = {
-    'DEBUG': False,
-    'TESTING': False,
-    'PORT': 8000,
-    'WORKER': 1,
+#     LgySpring865320
+    'DEBUG': True
 }
 
 
 def load_settings(config, **kwargs):
     config.update(**settings)
-    try:
-        from .routes import routes
-
-        config.update_uri(routes)
-    except:
-        pass
+    config.update_db_setting()

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-from services.verification import verify_request
 
-from model.user import User
+from services.verification import verify_request
 
 class UserInfo(object):
     _scopes = None
@@ -30,22 +29,12 @@ class UserInfo(object):
                 return list(scopes)
             self.client_id = token_info.get('client_id', 'weixin')
             return token_info.get('scopes', [])
-        # TODO: test return open, panel
         return ['panel', 'open', 'backend']
-        # return []
 
     @property
     def account(self):
         if self._account is None:
             if self.valid and self.user_id:
                 # TODO: test
-                self._account = User.query.get(1)
+                self._account = None
         return self._account
-
-
-def before_request(obj):
-    pass
-
-
-def after_request(obj):
-    pass

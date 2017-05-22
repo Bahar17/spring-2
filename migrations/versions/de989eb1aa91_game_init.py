@@ -1,13 +1,13 @@
 """game_init
 
-Revision ID: 3269d4280da1
+Revision ID: de989eb1aa91
 Revises: 4d2c8ddc27db
-Create Date: 2017-05-15 17:29:50.163605
+Create Date: 2017-05-17 17:00:18.352492
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '3269d4280da1'
+revision = 'de989eb1aa91'
 down_revision = '4d2c8ddc27db'
 branch_labels = None
 depends_on = None

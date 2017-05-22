@@ -6,12 +6,16 @@ import tornado.ioloop
 import tornado.web
 import tornado.options
 import tornado.websocket
+import logging
+import socket
 from core.settings import load_tornado_settings
+from core.error_codes import update_error_codes
 from core import db, migrate
+from error_codes import error_codes
 
-modules = ['base', 'panel', 'ws']
+modules = ['panel', 'ws']
 config = load_tornado_settings(*modules)
-
+update_error_codes(error_codes)
 
 class Application(tornado.web.Application):
     teardown_request_funcs = []
@@ -26,8 +30,27 @@ class Application(tornado.web.Application):
         return f
 
 
+
+class RestfulErrorHandler(tornado.web.ErrorHandler):
+    def write_error(self, status_code, **kwargs):
+        """Override to implement custom error pages.
+
+        ``write_error`` may call `write`, `render`, `set_header`, etc
+        to produce output as usual.
+
+        If this error was caused by an uncaught exception (including
+        HTTPError), an ``exc_info`` triple will be available as
+        ``kwargs["exc_info"]``.  Note that this exception may not be
+        the "current" exception for purposes of methods like
+        ``sys.exc_info()`` or ``traceback.format_exc``.
+        """
+        self.finish({
+            "code": status_code,
+            "message": self._reason,
+        })
+
+
 def make_app(**kwargs):
-    import socket
     socket.setdefaulttimeout(kwargs.get('timeout', 2))
     if kwargs:
         config.DEBUG = kwargs.get('debug')
@@ -39,8 +62,10 @@ def make_app(**kwargs):
     url_list.extend(config.URIS)
 
     app_settings = {
-        "cookie_secret": "bZJc2sWbQLKos6GkHn/VB9oXwQt8S0R0kRvJ5/xJ89E=",
-        "static_path": os.path.join(os.path.dirname(__file__), "static")
+        "static_path": os.path.join(os.path.dirname(__file__), "static"),
+        "default_handler_class": RestfulErrorHandler,
+        "default_handler_args": dict(status_code=404)
+
     }
 
     app = Application(url_list, __name__,
@@ -59,6 +84,10 @@ def main(**kwargs):
     http_server = tornado.httpserver.HTTPServer(app)
     http_server.bind(config.PORT)
     http_server.start(config.WORKER)
+    tornado.options.options.logging = "info"
+    tornado.options.parse_command_line()
+    logging.info(
+        "http://" + str(socket.gethostname()) + ":" + str(config.PORT) + '/urls?pid=127f7a5e3a366bd0&kind=1' + " ")
     tornado.ioloop.IOLoop.current().start()
 
 

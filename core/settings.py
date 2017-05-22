@@ -5,7 +5,10 @@ import importlib
 
 from os import path, environ as _env
 
-settings = {}
+try:
+    from settings import settings
+except ImportError:
+    settings = {}
 
 
 class CalypsoEnv(object):
@@ -40,24 +43,25 @@ def load_tornado_settings(*modules):
     kwargs = {}
     mods = []
     config = Config()
+    config.update(**settings)
+    try:
+        setting_mod = importlib.import_module('my_settings')
+        if hasattr(setting_mod, 'load_settings'):
+            getattr(setting_mod, 'load_settings')(config, **kwargs)
+    except ImportError:
+        pass
 
     for module in modules:
         try:
-            mods.append(importlib.import_module('%s.settings' % module))
-        except ImportError, err:
-            raise ImportError(
-                "Could not import settings '%s' (Is it on sys.path?): %s" % (
-                    module, err))
-
-    for module in modules:
-        try:
-            mods.append(importlib.import_module('%s.my_settings' % module))
+            mods.append(importlib.import_module('%s.routes' % module))
         except ImportError:
-            pass
+            raise ImportError(
+                "Could not import routers '%s' (Is it on sys.path?)" % (
+                    module))
 
     for mod in mods:
-        if hasattr(mod, 'load_settings'):
-            getattr(mod, 'load_settings')(config, **kwargs)
+        if hasattr(mod, 'load_uris'):
+            getattr(mod, 'load_uris')(config, **kwargs)
 
     return config
 
@@ -109,3 +113,4 @@ class Config(object):
     DB_PORT = '3306'
     SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s?charset=utf8' % (DB_USER, DB_PWD, DB_HOST, DB_PORT, DB_NAME)
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_ECHO = False
