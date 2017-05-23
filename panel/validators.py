@@ -47,7 +47,7 @@ class ValidatorAdaptor(object):
 
         convert_funs = {
             'integer': lambda v: self.validate_number(int, v[0]),
-            'boolean': lambda v: v[0].lower() not in ['n', 'no', 'false', '', '0'],
+            'boolean': lambda v: v[0] not in ['n', 'no', 'false', '', '0', False],
             'null': lambda v: None,
             'number': lambda v: self.validate_number(float, v[0]),
             'string': lambda v: v[0]
@@ -150,7 +150,10 @@ def response_filter(obj):
                         reason=json.dumps(errors))
             obj.set_status(status)
             obj.set_headers(headers)
-            obj.write(json.dumps(resp))
+            resule = {'status': 'success',
+                      'code': '000000',
+                      'results': resp}
+            obj.write(resule)
             return
         return wrapper
     return _response_filter

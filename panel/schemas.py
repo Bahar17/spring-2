@@ -11,15 +11,21 @@
 
 
 DefinitionsCreateprofession = {'properties': {'name': {'type': 'string'}}}
+DefinitionsUpdateplacefile = {'properties': {'content': {'type': 'string'}, 'imgs': {'items': {'type': 'string'}, 'type': 'array'}, 'name': {'type': 'string'}}}
 DefinitionsUpdategamerole = {'properties': {'profession_id': {'type': 'integer', 'format': 'int32'}, 'name': {'type': 'string'}, 'true_name': {'type': 'string'}, 'summary': {'type': 'string'}, 'play_script': {'items': {'type': 'string'}, 'type': 'array'}, '_avatar': {'type': 'string'}, 'hidden_profession_id': {'type': 'integer', 'format': 'int32'}, 'desc': {'type': 'string'}}}
 DefinitionsGamerole = {'properties': {'profession_id': {'type': 'integer', 'format': 'int32'}, 'name': {'type': 'string'}, 'true_name': {'type': 'string'}, 'summary': {'type': 'string'}, 'play_script': {'items': {'type': 'string'}, 'type': 'array'}, '_avatar': {'type': 'string'}, 'hidden_profession_id': {'type': 'integer', 'format': 'int32'}, 'game_id': {'type': 'string'}, 'id': {'type': 'integer', 'format': 'int32'}, 'desc': {'type': 'string'}}}
+DefinitionsCreategameplace = {'properties': {'hiding_keys': {'items': {'type': 'string'}, 'type': 'array'}, 'name': {'type': 'string'}, 'owner': {'type': 'integer', 'format': 'int32'}, 'allow_type': {'type': 'string'}, 'is_hiding': {'type': 'boolean'}, 'type': {'type': 'string'}, 'allow_ids': {'items': {'type': 'integer', 'format': 'int32'}, 'type': 'array'}}}
+DefinitionsUpdateplaceclue = {'properties': {'content': {'type': 'string'}, 'imgs': {'items': {'type': 'string'}, 'type': 'array'}, 'order_score': {'type': 'integer'}}}
+DefinitionsCreateplaceclue = {'properties': {'content': {'type': 'string'}, 'imgs': {'items': {'type': 'string'}, 'type': 'array'}, 'order_score': {'type': 'integer'}}}
 DefinitionsSuccess = {'properties': {'ok': {'type': 'boolean'}}}
-DefinitionsGameplace = {'properties': {'name': {'type': 'string'}, 'type': {'type': 'string'}, 'is_hiding': {'type': 'boolean'}, 'hiding_keys': {'items': {'type': 'string'}, 'type': 'array'}, 'owner': {'type': 'integer', 'format': 'int32'}, 'game_id': {'type': 'string'}, 'allow_type': {'type': 'string'}, 'id': {'type': 'integer', 'format': 'int32'}, 'allow_ids': {'items': {'type': 'integer', 'format': 'int32'}, 'type': 'array'}}}
+DefinitionsPlacefile = {'properties': {'content': {'type': 'string'}, 'imgs': {'items': {'type': 'string'}, 'type': 'array'}, 'place_id': {'type': 'integer'}, 'id': {'type': 'integer', 'format': 'int32'}, 'name': {'type': 'string'}}}
 DefinitionsProfession = {'properties': {'id': {'type': 'integer', 'format': 'int32'}, 'name': {'type': 'string'}}}
 DefinitionsCreatelarpgame = {'required': ['name'], 'properties': {'manager_manual': {'type': 'string'}, 'description': {'type': 'string'}, 'name': {'type': 'string'}, 'ap_num': {'type': 'integer', 'format': 'int32'}, 'price': {'type': 'integer', 'format': 'int32'}, 'max_required_num': {'type': 'integer', 'format': 'int32'}, 'player_manual': {'type': 'string'}, 'summary': {'type': 'string'}, 'others': {'type': 'string'}, 'mission_manual': {'type': 'string'}, 'icon': {'type': 'string'}, 'type': {'type': 'string'}, 'min_required_num': {'type': 'integer', 'format': 'int32'}}}
-DefinitionsUpdateprofession = {'properties': {'name': {'type': 'string'}}}
-DefinitionsCreategameplace = {'properties': {'hiding_keys': {'items': {'type': 'string'}, 'type': 'array'}, 'name': {'type': 'string'}, 'owner': {'type': 'integer', 'format': 'int32'}, 'allow_type': {'type': 'string'}, 'is_hiding': {'type': 'boolean'}, 'type': {'type': 'string'}, 'allow_ids': {'items': {'type': 'integer', 'format': 'int32'}, 'type': 'array'}}}
 DefinitionsNone = {'type': 'object'}
+DefinitionsUpdateprofession = {'properties': {'name': {'type': 'string'}}}
+DefinitionsCreateplacefile = {'properties': {'content': {'type': 'string'}, 'imgs': {'items': {'type': 'string'}, 'type': 'array'}, 'name': {'type': 'string'}}}
+DefinitionsPlaceclue = {'properties': {'content': {'type': 'string'}, 'imgs': {'items': {'type': 'string'}, 'type': 'array'}, 'place_id': {'type': 'integer'}, 'order_score': {'type': 'integer'}, 'id': {'type': 'integer', 'format': 'int32'}}}
+DefinitionsGameplace = {'properties': {'name': {'type': 'string'}, 'type': {'type': 'string'}, 'is_hiding': {'type': 'boolean'}, 'hiding_keys': {'items': {'type': 'string'}, 'type': 'array'}, 'owner': {'type': 'integer', 'format': 'int32'}, 'game_id': {'type': 'string'}, 'allow_type': {'type': 'string'}, 'id': {'type': 'integer', 'format': 'int32'}, 'allow_ids': {'items': {'type': 'integer', 'format': 'int32'}, 'type': 'array'}}}
 DefinitionsLarpgame = {'properties': {'manager_manual': {'type': 'string'}, 'description': {'type': 'string'}, 'ap_num': {'type': 'integer', 'format': 'int32'}, 'price': {'type': 'integer', 'format': 'int32'}, 'max_required_num': {'type': 'integer', 'format': 'int32'}, 'player_manual': {'type': 'string'}, 'summary': {'type': 'string'}, 'others': {'type': 'string'}, 'mission_manual': {'type': 'string'}, 'min_required_num': {'type': 'integer', 'format': 'int32'}, 'icon': {'type': 'string'}, 'type': {'type': 'string'}, 'id': {'type': 'string'}, 'name': {'type': 'string'}}}
 DefinitionsUpdatelarpgame = {'properties': {'manager_manual': {'type': 'string'}, 'description': {'type': 'string'}, 'name': {'type': 'string'}, 'ap_num': {'type': 'integer', 'format': 'int32'}, 'price': {'type': 'integer', 'format': 'int32'}, 'max_required_num': {'type': 'integer', 'format': 'int32'}, 'player_manual': {'type': 'string'}, 'summary': {'type': 'string'}, 'others': {'type': 'string'}, 'mission_manual': {'type': 'string'}, 'icon': {'type': 'string'}, 'type': {'type': 'string'}, 'min_required_num': {'type': 'integer', 'format': 'int32'}}}
 DefinitionsUpdategameplace = {'properties': {'hiding_keys': {'items': {'type': 'string'}, 'type': 'array'}, 'name': {'type': 'string'}, 'owner': {'type': 'integer', 'format': 'int32'}, 'allow_type': {'type': 'string'}, 'is_hiding': {'type': 'boolean'}, 'type': {'type': 'string'}, 'allow_ids': {'items': {'type': 'integer', 'format': 'int32'}, 'type': 'array'}}}
@@ -27,15 +33,25 @@ DefinitionsCreategamerole = {'properties': {'profession_id': {'type': 'integer',
 DefinitionsError = {'properties': {'text': {'type': 'string'}, 'message': {'type': 'string'}, 'error_code': {'type': 'string'}}}
 
 validators = {
+    ('places_id_clue', 'POST'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'json': DefinitionsCreateplaceclue},
+    ('places_id_clue', 'GET'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'args': {'required': [], 'properties': {'per_page': {'description': 'per_page number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 100}, 'limit': {'description': 'limit number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 100}, 'page': {'description': 'page number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 10000}, 'offset': {'description': 'offset number', 'format': 'int32', 'required': False, 'type': 'integer'}}}},
     ('places_place_id', 'PUT'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'json': DefinitionsUpdategameplace},
     ('places_place_id', 'GET'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}},
     ('places_place_id', 'DELETE'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}},
     ('games_id', 'PUT'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'json': DefinitionsUpdatelarpgame},
     ('games_id', 'GET'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}},
+    ('clue_id', 'PUT'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'json': DefinitionsUpdateplaceclue},
+    ('clue_id', 'GET'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}},
+    ('clue_id', 'DELETE'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}},
     ('games', 'POST'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'json': DefinitionsCreatelarpgame},
     ('games', 'GET'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'args': {'required': [], 'properties': {'per_page': {'description': 'per_page number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 100}, 'limit': {'description': 'limit number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 100}, 'page': {'description': 'page number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 10000}, 'offset': {'description': 'offset number', 'format': 'int32', 'required': False, 'type': 'integer'}}}},
+    ('file_id', 'PUT'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'json': DefinitionsUpdateplacefile},
+    ('file_id', 'GET'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}},
+    ('file_id', 'DELETE'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}},
     ('games_id_places', 'POST'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'json': DefinitionsCreategameplace},
     ('games_id_places', 'GET'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'args': {'required': [], 'properties': {'per_page': {'description': 'per_page number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 100}, 'limit': {'description': 'limit number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 100}, 'page': {'description': 'page number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 10000}, 'offset': {'description': 'offset number', 'format': 'int32', 'required': False, 'type': 'integer'}}}},
+    ('places_id_file', 'POST'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'json': DefinitionsCreateplacefile},
+    ('places_id_file', 'GET'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'args': {'required': [], 'properties': {'per_page': {'description': 'per_page number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 100}, 'limit': {'description': 'limit number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 100}, 'page': {'description': 'page number', 'format': 'int32', 'required': False, 'type': 'integer', 'maximum': 10000}, 'offset': {'description': 'offset number', 'format': 'int32', 'required': False, 'type': 'integer'}}}},
     ('professions_id', 'PUT'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}, 'json': DefinitionsUpdateprofession},
     ('professions_id', 'GET'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}},
     ('professions_id', 'DELETE'): {'headers': {'required': ['Authorization'], 'properties': {'Authorization': {'type': 'string'}}}},
@@ -49,15 +65,25 @@ validators = {
 }
 
 filters = {
+    ('places_id_clue', 'POST'): {201: {'headers': None, 'schema': DefinitionsPlaceclue}},
+    ('places_id_clue', 'GET'): {200: {'headers': None, 'schema': {'items': DefinitionsPlaceclue, 'type': 'array'}}},
     ('places_place_id', 'PUT'): {200: {'headers': None, 'schema': DefinitionsGameplace}},
     ('places_place_id', 'GET'): {200: {'headers': None, 'schema': DefinitionsGameplace}},
     ('places_place_id', 'DELETE'): {204: {'headers': None, 'schema': DefinitionsSuccess}},
     ('games_id', 'PUT'): {200: {'headers': None, 'schema': DefinitionsLarpgame}},
     ('games_id', 'GET'): {200: {'headers': None, 'schema': DefinitionsLarpgame}},
+    ('clue_id', 'PUT'): {200: {'headers': None, 'schema': DefinitionsPlaceclue}},
+    ('clue_id', 'GET'): {200: {'headers': None, 'schema': DefinitionsPlaceclue}},
+    ('clue_id', 'DELETE'): {204: {'headers': None, 'schema': DefinitionsSuccess}},
     ('games', 'POST'): {201: {'headers': None, 'schema': DefinitionsLarpgame}},
     ('games', 'GET'): {200: {'headers': None, 'schema': {'items': DefinitionsLarpgame, 'type': 'array'}}},
+    ('file_id', 'PUT'): {200: {'headers': None, 'schema': DefinitionsPlacefile}},
+    ('file_id', 'GET'): {200: {'headers': None, 'schema': DefinitionsPlacefile}},
+    ('file_id', 'DELETE'): {204: {'headers': None, 'schema': DefinitionsSuccess}},
     ('games_id_places', 'POST'): {201: {'headers': None, 'schema': DefinitionsGameplace}},
     ('games_id_places', 'GET'): {200: {'headers': None, 'schema': {'items': DefinitionsGameplace, 'type': 'array'}}},
+    ('places_id_file', 'POST'): {201: {'headers': None, 'schema': DefinitionsPlacefile}},
+    ('places_id_file', 'GET'): {200: {'headers': None, 'schema': {'items': DefinitionsPlacefile, 'type': 'array'}}},
     ('professions_id', 'PUT'): {200: {'headers': None, 'schema': DefinitionsProfession}},
     ('professions_id', 'GET'): {200: {'headers': None, 'schema': DefinitionsProfession}},
     ('professions_id', 'DELETE'): {204: {'headers': None, 'schema': DefinitionsSuccess}},
@@ -71,15 +97,25 @@ filters = {
 }
 
 scopes = {
+    ('places_id_clue', 'POST'): ['panel'],
+    ('places_id_clue', 'GET'): ['panel'],
     ('places_place_id', 'PUT'): ['panel'],
     ('places_place_id', 'GET'): ['panel'],
     ('places_place_id', 'DELETE'): ['panel'],
     ('games_id', 'PUT'): ['panel'],
     ('games_id', 'GET'): ['panel'],
+    ('clue_id', 'PUT'): ['panel'],
+    ('clue_id', 'GET'): ['panel'],
+    ('clue_id', 'DELETE'): ['panel'],
     ('games', 'POST'): ['panel'],
     ('games', 'GET'): ['panel'],
+    ('file_id', 'PUT'): ['panel'],
+    ('file_id', 'GET'): ['panel'],
+    ('file_id', 'DELETE'): ['panel'],
     ('games_id_places', 'POST'): ['panel'],
     ('games_id_places', 'GET'): ['panel'],
+    ('places_id_file', 'POST'): ['panel'],
+    ('places_id_file', 'GET'): ['panel'],
     ('professions_id', 'PUT'): ['panel'],
     ('professions_id', 'GET'): ['panel'],
     ('professions_id', 'DELETE'): ['panel'],

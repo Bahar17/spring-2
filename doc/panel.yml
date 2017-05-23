@@ -82,6 +82,76 @@ definitions:
                 items:
                     type: integer
                     format: int32
+    PlaceClue:
+        properties:
+            id:
+                type: integer
+                format: int32
+            place_id:
+                type: integer
+            order_score:
+                type: integer
+            content:
+                type: string
+            imgs:
+                type: array
+                items:
+                    type: string
+    CreatePlaceClue:
+        properties:
+            order_score:
+                type: integer
+            content:
+                type: string
+            imgs:
+                type: array
+                items:
+                    type: string
+    UpdatePlaceClue:
+        properties:
+            order_score:
+                type: integer
+            content:
+                type: string
+            imgs:
+                type: array
+                items:
+                    type: string
+    PlaceFile:
+        properties:
+            id:
+                type: integer
+                format: int32
+            place_id:
+                type: integer
+            name:
+                type: string
+            content:
+                type: string
+            imgs:
+                type: array
+                items:
+                    type: string
+    CreatePlaceFile:
+        properties:
+            name:
+                type: string
+            content:
+                type: string
+            imgs:
+                type: array
+                items:
+                    type: string
+    UpdatePlaceFile:
+        properties:
+            name:
+                type: string
+            content:
+                type: string
+            imgs:
+                type: array
+                items:
+                    type: string
     GameRole:
         properties:
             id:
@@ -722,6 +792,220 @@ paths:
             parameters:
                 - $ref: '#/parameters/AccessToken'
                 - $ref: '#/parameters/place_id_in_path'
+            responses:
+                204:
+                    schema:
+                        $ref: '#/definitions/Success'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /places/{id}/clue:
+        get:
+            summary: 游戏地点的线索
+            description: 游戏地点的线索
+            tags: [GAMES]
+            operationdId: get_places_clue
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+                - $ref: '#/parameters/offset'
+                - $ref: '#/parameters/limit'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+            responses:
+                200:
+                    description: 游戏地点的线索
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/PlaceClue'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        post:
+            summary: 创建一个游戏地点的线索
+            description: 创建一个游戏地点的线索
+            tags: [GAMES]
+            operationdId: create_places_clue
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+                - name: create_places_clue
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/CreatePlaceClue'
+            responses:
+                201:
+                    description: 游戏地点的线索
+                    schema:
+                        $ref: '#/definitions/PlaceClue'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /clue/{id}:
+        get:
+            summary: 游戏地点线索
+            tags: [GAMES]
+            operationdId: get_places_clue
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/PlaceClue'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        put:
+            summary: 更新游戏地点线索
+            tags: [GAMES]
+            operationdId: put_places_clue
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+                - name: update_places_clue
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/UpdatePlaceClue'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/PlaceClue'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        delete:
+            summary: 删除游戏地点线索
+            tags: [GAMES]
+            operationdId: delete_places_clue
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+            responses:
+                204:
+                    schema:
+                        $ref: '#/definitions/Success'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /places/{id}/file:
+        get:
+            summary: 游戏地点的线索
+            description: 游戏地点的线索
+            tags: [GAMES]
+            operationdId: get_places_file
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+                - $ref: '#/parameters/offset'
+                - $ref: '#/parameters/limit'
+                - $ref: '#/parameters/page'
+                - $ref: '#/parameters/per_page'
+            responses:
+                200:
+                    description: 游戏地点的线索
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/PlaceFile'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        post:
+            summary: 创建一个游戏地点的线索
+            description: 创建一个游戏地点的线索
+            tags: [GAMES]
+            operationdId: create_places_file
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+                - name: create_places_file
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/CreatePlaceFile'
+            responses:
+                201:
+                    description: 游戏地点的线索
+                    schema:
+                        $ref: '#/definitions/PlaceFile'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+    /file/{id}:
+        get:
+            summary: 游戏地点线索
+            tags: [GAMES]
+            operationdId: get_places_file
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/PlaceFile'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        put:
+            summary: 更新游戏地点线索
+            tags: [GAMES]
+            operationdId: put_places_file
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
+                - name: update_places_file
+                  in: body
+                  required: true
+                  schema:
+                      $ref: '#/definitions/UpdatePlaceFile'
+            responses:
+                200:
+                    schema:
+                        $ref: '#/definitions/PlaceFile'
+                default:
+                    description: Unexpected Error
+                    schema:
+                        $ref: '#/definitions/Error'
+            security:
+                - OAuth2: [panel]
+        delete:
+            summary: 删除游戏地点线索
+            tags: [GAMES]
+            operationdId: delete_places_file
+            parameters:
+                - $ref: '#/parameters/AccessToken'
+                - $ref: '#/parameters/int_id_in_path'
             responses:
                 204:
                     schema:

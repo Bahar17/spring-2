@@ -3,6 +3,14 @@ import json
 from sqlalchemy import sql
 from core import db, Model, DateTime, JsonText, generator_string_id
 
+__all__ = [
+    'LarpGame',
+    'GamePlace',
+    'GameRole',
+    'RoleProfession',
+    'PlaceFile',
+    'PlaceClue',
+]
 
 def game_id_generator():
     id = generator_string_id(20, 3)

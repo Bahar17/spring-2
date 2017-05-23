@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from main import db
 
+__all__ = [
+    'User',
+]
 
 class User(db.Model):
 

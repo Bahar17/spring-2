@@ -37,6 +37,7 @@ class RequestHandler(tornado.web.RequestHandler):
         ``sys.exc_info()`` or ``traceback.format_exc``.
         """
         self.finish({
+            "status": "error",
             "code": status_code,
             "message": self._reason,
         })
