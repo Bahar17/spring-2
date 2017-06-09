@@ -18,7 +18,7 @@ dump.rdb
 celerybeat.pid
 celerybeat-schedule*
 celerybeat-schedule.db
-
+keys/
 node_modules
 .tmp
 tests/.cache
@@ -28,6 +28,7 @@ assets.json
 .sass-cache
 npm-debug.log
 base/my_settings.*
+lua_app/lua/my_settings.*
 # Packages
 lib
 !static-src/front/scripts/lib

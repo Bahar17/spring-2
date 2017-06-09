@@ -1,0 +1,156 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/statics/favicon.ico">
+
+    <title>LARP后台管理</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/statics/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- css link block -->
+    {* blocks.link *}
+
+    <style type="text/css">
+
+
+        hr {
+            margin: 3px 0;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        .table td {
+            font-size: 13px;
+            word-break: break-all;
+            max-width: 250px;
+        }
+
+        .table thead tr th {
+            border-bottom: 1px;
+        }
+
+        #content-box {
+            max-width: 82%;
+            width: auto;
+            min-width: 720px;
+        }
+
+        .message {
+            margin-bottom: 5px;
+        }
+
+        .message-error {
+            color: indianred;
+        }
+
+        .message-info {
+            color: deepskyblue;
+        }
+
+    </style>
+</head>
+
+<body>
+
+{% if blocks.body then %}
+{* blocks.body *}
+{% else %}
+<nav class="navbar navbar-static-top"
+     style="background-color:#5bc0de;border-color:#5bc0de;">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" style="color:#FFF;" href="#">
+                <span class="glyphicon glyphicon-grain"
+                      aria-hidden="true"></span>&nbsp;LARP后台管理
+            </a>
+        </div>
+        <div class="navbar-collapse collapse" aria-expanded="false"
+             style="height: 1px;">
+            <ul class="nav navbar-nav">
+                <li>
+                    <span class="navbar-text" style="color:#FFF;">这是啥</span>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <p class="navbar-text" style="color:#FFF;">
+                        Logged in as <span style="margin:6px;">|</span><a
+                            style="color:#FFF;" href="/signout/"
+                            class="navbar-link">注销</a>
+                        &nbsp;
+                <span class="glyphicon glyphicon-qrcode"
+                      aria-hidden="true"></span>
+                    </p>
+                </li>
+            </ul>
+
+        </div>
+        <!-- /.nav-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<!-- /.navbar -->
+
+<div class="container">
+    <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar">
+            <div class="list-group">
+                {(sider_bar.html)}
+            </div>
+        </div>
+        <!--/.sidebar-offcanvas-->
+
+        <div class="col-xs-6 col-sm-10">
+            {% if blocks.content then %}
+                {* blocks.content *}
+            {% else %}
+            <div class="jumbotron">
+                <h2>tmp</h2>
+
+                <p>哈哈</p>
+            </div>
+            <div class="row">
+
+            </div>
+            <!--/row-->
+            {% end %}
+        </div>
+        <!--/.col-xs-12.col-sm-9-->
+    </div>
+    <!--/row-->
+
+
+    <footer>
+        <p>&copy; Company 2017</p>
+    </footer>
+
+
+</div>
+{% end %}
+<!--/.container-->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/statics/jquery-1.12.4.js"></script>
+<script src="/statics/bootstrap/js/bootstrap.min.js"></script>
+
+{* blocks.js *}
+</body>
+</html>
