@@ -4,8 +4,10 @@ local assert = assert
 local io_open = io.open
 local routers = require('lua.routers')
 local ipairs = ipairs
-local settings = require('lua.my_settings')
-
+local util = require('lua.gytre.util')
+local my_settings = require('lua.my_settings')
+local settings = require('lua.settings')
+util.table_merge(settings, my_settings)
 -- load router
 local _R = R:new()
 
@@ -20,7 +22,11 @@ ngx.log(ngx.ERR, "=======finish Router initial=======")
 
 -- load rsa key --
 local function read_files(fileName)
-    local f = assert(io_open(fileName,'r'))
+    local f = io_open(fileName,'r')
+    if f == nil then
+        ngx.log(ngx.ERR, fileName .. ':No such file or directory')
+        return nil
+    end
     local content = f:read("*all")
     f:close()
     return content
